@@ -7,27 +7,16 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
-var pieces = []Piece{
-	PiecePawn,
-	PieceKnight,
-	PieceBishop,
-	PieceRook,
-	PieceKing,
-	PieceQueen,
-}
-
-func GetPositionForPiece(piece Piece) (float64, float64) {
-	i := int(piece)
-	x := float64(TileSize*3 + TileSize*BoardWidth*2)
-	y := float64(i+1) * TileSize
-	return x, y
+type Shop struct {
+	PieceToPlace Piece
+	Coins        int
 }
 
 func (game *Game) UpdateShop() {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 		mx, my := ebiten.CursorPosition()
 
-		for _, piece := range pieces {
+		for piece := range PiecePrices {
 			x, y := GetPositionForPiece(piece)
 			half := float64(TileSize / 2)
 			dx := math.Abs(x + half - float64(mx))
@@ -40,7 +29,7 @@ func (game *Game) UpdateShop() {
 }
 
 func (graphics *Graphics) DrawShop(screen *ebiten.Image, shop *Shop) {
-	for _, piece := range pieces {
+	for piece, _ := range PiecePrices {
 		x, y := GetPositionForPiece(piece)
 		opt := graphics.Position(x, y)
 
@@ -50,5 +39,22 @@ func (graphics *Graphics) DrawShop(screen *ebiten.Image, shop *Shop) {
 		if piece == shop.PieceToPlace {
 			screen.DrawImage(Sprites[SpriteHover], &opt)
 		}
+
 	}
+}
+
+var PiecePrices = map[Piece]int{
+	PiecePawn:   1,
+	PieceKnight: 3,
+	PieceBishop: 3,
+	PieceRook:   5,
+	PieceQueen:  10,
+	PieceKing:   10,
+}
+
+func GetPositionForPiece(piece Piece) (float64, float64) {
+	i := int(piece)
+	x := float64(TileSize*3 + TileSize*BoardWidth*2)
+	y := float64(i+1) * TileSize
+	return x, y
 }

@@ -82,8 +82,8 @@ const (
 	PieceKnight
 	PieceRook
 	PieceBishop
-	PieceKing
 	PieceQueen
+	PieceKing
 )
 
 func randomPiece() Piece {
