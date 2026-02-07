@@ -29,7 +29,7 @@ const (
 	SpritePawnWhite   SpriteID = "pawn_white"
 )
 
-const t = 16
+const t = TileSize
 
 var atlas = map[SpriteID]image.Rectangle{
 	SpriteBoard:     image.Rect(t*0, t*0, t*10, t*9),
