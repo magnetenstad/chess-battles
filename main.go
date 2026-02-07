@@ -17,9 +17,12 @@ func (g *Game) Update() error {
 
 		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 			x, y := ebiten.CursorPosition()
-			handleClick(g, board, x, y)
+			handleLeftClick(g, board, x, y)
 		}
-
+		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonRight) {
+			x, y := ebiten.CursorPosition()
+			handleRightClick(g, board, x, y)
+		}
 		events := g.Events
 		g.Events = nil
 		for _, event := range events {
@@ -30,12 +33,20 @@ func (g *Game) Update() error {
 	return nil
 }
 
-func handleClick(game *Game, board *Board, x, y int) {
+func handleLeftClick(game *Game, board *Board, x, y int) {
 	x, y, ok := ScreenToTile(board, x, y)
 	if !ok {
 		return
 	}
-	game.Events = append(game.Events, Event{kind: EventDelete, x: x, y: y})
+	game.Events = append(game.Events, Event{kind: EventDelete, DeleteEvent: DeleteEvent{x: x, y: y}})
+}
+
+func handleRightClick(game *Game, board *Board, x, y int) {
+	x, y, ok := ScreenToTile(board, x, y)
+	if !ok {
+		return
+	}
+	game.Events = append(game.Events, Event{kind: EventSpawn, SpawnEvent: SpawnEvent{Tile: Tile{Piece: PiecePawn, Color: White}, x: x, y: y}})
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
