@@ -33,11 +33,6 @@ func NewBoard() Board {
 
 }
 
-type Player struct {
-	Id   string
-	Name string
-}
-
 type Tile struct {
 	Piece Piece
 	Color Color

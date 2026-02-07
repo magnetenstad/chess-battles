@@ -4,6 +4,7 @@ type Game struct {
 	Logic    Logic
 	Graphics Graphics
 	Events   []Event
+	Shop     Shop
 }
 
 func NewGame() Game {
