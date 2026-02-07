@@ -27,8 +27,10 @@ func scoreBoard(board *Board, color Color) int {
 				continue
 			} else if tile.Color == color {
 				score += pieceScores[tile.Piece]
+				score += advanceFor(tile.Color, y)
 			} else {
 				score -= pieceScores[tile.Piece]
+				score -= advanceFor(tile.Color, y)
 			}
 		}
 	}
