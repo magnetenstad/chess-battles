@@ -9,21 +9,33 @@ import (
 )
 
 func (g *Game) Update() error {
-	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
-		x, y := ebiten.CursorPosition()
-		handleClick(&g.Board1, x, y)
-		handleClick(&g.Board2, x, y)
+	// players := []*Player{&g.Player1, &g.Player2}
+	boards := []*Board{&g.Board1, &g.Board2}
+
+	for i := range boards {
+		board := boards[i]
+
+		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+			x, y := ebiten.CursorPosition()
+			handleClick(g, board, x, y)
+		}
+
+		events := g.Events
+		g.Events = nil
+		for _, event := range events {
+			HandleEvent(board, event)
+		}
 	}
 
 	return nil
 }
 
-func handleClick(board *Board, x, y int) {
+func handleClick(game *Game, board *Board, x, y int) {
 	x, y, ok := ScreenToTile(board, x, y)
 	if !ok {
 		return
 	}
-	board.Tiles[y][x].Piece = None
+	game.Events = append(game.Events, Event{kind: EventDelete, x: x, y: y})
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {

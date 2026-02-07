@@ -19,7 +19,7 @@ func (board *Board) draw(screen *ebiten.Image) {
 
 			tile := board.Tiles[y][x]
 
-			if tile.Piece == None {
+			if tile.Piece == PieceEmpty {
 				continue
 			}
 

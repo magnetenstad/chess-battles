@@ -5,13 +5,11 @@ import (
 )
 
 type Game struct {
-	Board1      Board
-	Board2      Board
-	Player1     Player
-	Player2     Player
-	IsGameOver  bool
-	Winner      int
-	TickCounter uint64
+	Board1  Board
+	Board2  Board
+	Player1 Player
+	Player2 Player
+	Events  []Event
 }
 
 func NewGame() Game {
@@ -32,13 +30,6 @@ func NewBoard(width, height int, screenX, screenY int) Board {
 	for i := range tiles {
 		tiles[i] = make([]Tile, width)
 	}
-	board := Board{
-		ScreenX: screenX,
-		ScreenY: screenY,
-		Width:   width,
-		Height:  height,
-		Tiles:   tiles,
-	}
 
 	for i := range tiles {
 		for j := range tiles[i] {
@@ -49,7 +40,14 @@ func NewBoard(width, height int, screenX, screenY int) Board {
 		}
 	}
 
-	return board
+	return Board{
+		ScreenX: screenX,
+		ScreenY: screenY,
+		Width:   width,
+		Height:  height,
+		Tiles:   tiles,
+	}
+
 }
 
 type Player struct {
@@ -72,14 +70,17 @@ const (
 )
 
 func randomColor() Color {
-	colors := []Color{White, Black}
+	colors := []Color{
+		White,
+		Black,
+	}
 	return colors[rand.Intn(len(colors))]
 }
 
 type Piece int
 
 const (
-	None Piece = iota
+	PieceEmpty Piece = iota
 	PiecePawn
 	PieceKnight
 	PieceRook
@@ -89,6 +90,14 @@ const (
 )
 
 func randomPiece() Piece {
-	pieces := []Piece{None, PiecePawn, PieceKnight, PieceRook, PieceBishop, PieceKing, PieceQueen}
+	pieces := []Piece{
+		PieceEmpty,
+		PiecePawn,
+		PieceKnight,
+		PieceRook,
+		PieceBishop,
+		PieceKing,
+		PieceQueen,
+	}
 	return pieces[rand.Intn(len(pieces))]
 }
