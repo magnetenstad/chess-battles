@@ -323,13 +323,11 @@ func generateMovesForColor(board *Board, color Color) []Move {
 	moves := make([]Move, 0, 64)
 	for y := range BoardHeight {
 			for x := range BoardWidth {
-					t := board.Tiles[y][x]
-					if t.Piece == PieceEmpty || t.Color != color {
-							continue
-					}
-					moves = append(moves, getMoves(board, x, y)...)
-			}
-			moves = append(moves, getMoves(board, x, y)...)
+				t := board.Tiles[y][x]
+				if t.Piece == PieceEmpty || t.Color != color {
+						continue
+				}
+				moves = append(moves, getMoves(board, x, y)...)
 		}
 	}
 	return moves
