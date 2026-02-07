@@ -1,6 +1,8 @@
 package main
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
 type Logic struct {
 	Board1 Board
@@ -12,24 +14,45 @@ type Board struct {
 	turn int
 }
 
+func setupPawnsVsRooks(board *Board) {
+
+	// --- Black pawns in upper fields ---
+	// Fill first two ranks (adjust if you want more/less)
+	for y := 0; y < 2; y++ {
+		for x := 0; x < BoardWidth; x++ {
+			board.Tiles[y][x] = Tile{
+				Piece: PiecePawn,
+				Color: White,
+			}
+		}
+	}
+
+	// --- White rooks at the bottom ---
+	bottom := BoardHeight - 1
+
+	board.Tiles[bottom][0] = Tile{
+		Piece: PieceQueen,
+		Color: Black,
+	}
+
+
+	board.Tiles[bottom][BoardWidth-1] = Tile{
+		Piece: PieceQueen,
+		Color: Black,
+	}
+}
+
 func NewBoard() Board {
 	tiles := [BoardHeight][BoardWidth]Tile{}
 	for i := range tiles {
 		tiles[i] = [BoardWidth]Tile{}
 	}
 
-	for i := range tiles {
-		for j := range tiles[i] {
-			tiles[i][j] = Tile{
-				Piece: randomPiece(),
-				Color: randomColor(),
-			}
-		}
-	}
+	board := Board{};
 
-	return Board{
-		Tiles: tiles,
-	}
+	setupPawnsVsRooks(&board)
+
+	return board
 
 }
 
@@ -213,7 +236,7 @@ func getPawnMoves(board *Board, x, y int, color Color) []Move  {
 	}
 
 	newY := y + direction
-	if newY >= 0 && newY < BoardHeight {
+	if newY >= 0 && newY < BoardHeight && board.Tiles[newY][x].Piece == PieceEmpty {
 			moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: x, Y: newY}})
 	}
 	// Diagonals
@@ -292,7 +315,7 @@ func scoreBoard(board *Board, color Color) int {
 				continue
 			} else if tile.Color == color {
 				score += pieceScores[tile.Piece]
-			} else if tile.Color == oppositeColor(color) {
+			} else {
 				score -= pieceScores[tile.Piece]
 			}
 		}
@@ -302,8 +325,8 @@ func scoreBoard(board *Board, color Color) int {
 
 func generateMovesForColor(board *Board, color Color) []Move {
 	moves := make([]Move, 0, 64)
-	for y := 0; y < BoardHeight; y++ {
-			for x := 0; x < BoardWidth; x++ {
+	for y := range BoardHeight {
+			for x := range BoardWidth {
 					t := board.Tiles[y][x]
 					if t.Piece == PieceEmpty || t.Color != color {
 							continue
@@ -318,7 +341,7 @@ const INF = 1_000_000_000
 
 func alphaBeta(board *Board, color Color, depth int, alpha, beta int) int {
     if depth == 0 {
-        return scoreBoard(board, color) // eval from 'color' perspective
+        return scoreBoard(board, color)
     }
 
     moves := generateMovesForColor(board, color)
@@ -374,21 +397,20 @@ func getBestMove(board *Board, color Color, depth int) (Move, bool) {
 	alpha := -INF
 	beta := INF
 
-	for _, mv := range moves {
+	for _, move := range moves {
 			nb := *board
-			applyMove(&nb, mv)
+			applyMove(&nb, move)
 
 			score := -alphaBeta(&nb, oppositeColor(color), depth-1, -beta, -alpha)
 
 			if score > bestScore {
 					bestScore = score
-					bestMove = mv
+					bestMove = move
 			}
 			if score > alpha {
 					alpha = score
 			}
 	}
-
 	return bestMove, true
 }
 
@@ -396,12 +418,12 @@ func getBestMove(board *Board, color Color, depth int) (Move, bool) {
 func makeTurn(board *Board) {
 	board.turn++
 	if board.turn % 2 == 0 {
-		move, ok := getBestMove(board, White, 3)
+		move, ok := getBestMove(board, White, 6)
 		if ok {
 			applyMove(board, move)
 		}
 	} else {
-		move, ok := getBestMove(board, Black, 3)
+		move, ok := getBestMove(board, Black, 6)
 		if ok {
 			applyMove(board, move)
 		}

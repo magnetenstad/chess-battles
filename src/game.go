@@ -7,12 +7,15 @@ type Game struct {
 	Shop     Shop
 }
 
+
+
 func NewGame() Game {
 	return Game{
 		Logic: Logic{
 			Board1: NewBoard(),
 			Board2: NewBoard(),
 		},
+		
 		Graphics: Graphics{
 			Board1: GraphicsBoard{
 				ScreenX: TileSize,
