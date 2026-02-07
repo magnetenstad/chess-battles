@@ -17,6 +17,7 @@ type Game struct {
 func NewGame() Game {
 	return Game{
 		Board1: NewBoard(8, 8),
+		Board2: NewBoard(8, 8),
 	}
 }
 

@@ -12,18 +12,9 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	g.Board1.draw(screen, 20, 100)
+	g.Board2.draw(screen, 340, 100)
 
-	screen.DrawImage(Sprites[SpriteBoard].(*ebiten.Image), nil)
-
-	for y := 0; y < g.Board1.Height; y++ {
-		for x := 0; x < g.Board1.Width; x++ {
-			op := &ebiten.DrawImageOptions{}
-			op.GeoM.Translate(float64(x*16), float64(y*16))
-			tile := g.Board1.Tiles[y][x]
-			screen.DrawImage(Sprites[TileToSprite[tile.Color][tile.Piece]].(*ebiten.Image), op)
-
-		}
-	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
