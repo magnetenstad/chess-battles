@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 )
 
@@ -10,8 +11,8 @@ type Logic struct {
 }
 
 type Board struct {
-	Tiles [BoardHeight][BoardWidth]Tile
-	Turn  int
+	Tiles         [BoardHeight][BoardWidth]Tile
+	Turn          int
 	shakeDuration int
 }
 
@@ -159,6 +160,10 @@ func spawnRandomPieceOnBackRow(board *Board) {
 func makeTurn(board *Board) {
 	move, ok := getBestMove(board, 3)
 	if ok {
+		target := board.Tiles[move.to.Y][move.to.X]
+		if target.Piece != PieceEmpty {
+			fmt.Println("Piece of kind", target.Piece, "and color", target.Color, "was captured at position", move.to.X, move.to.Y)
+		}
 		applyMove(board, move)
 	}
 }
