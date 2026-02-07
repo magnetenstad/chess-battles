@@ -6,6 +6,7 @@
 # https://github.com/github/gitignore/blob/main/community/Golang/Go.AllowList.gitignore
 #
 # Binaries for programs and plugins
+chess-battles
 *.exe
 *.exe~
 *.dll
@@ -27,3 +28,4 @@ go.work
 # End of https://www.toptal.com/developers/gitignore/api/go
 
 .DS_Store
+web
