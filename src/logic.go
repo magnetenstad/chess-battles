@@ -9,7 +9,7 @@ type Logic struct {
 
 type Board struct {
 	Tiles [BoardHeight][BoardWidth]Tile
-	turn int
+	turn  int
 }
 
 func NewBoard() Board {
@@ -85,17 +85,17 @@ type Position struct {
 
 type Move struct {
 	from Position
-	to Position
+	to   Position
 }
 
 var pieceScores = map[Piece]int{
-	PieceEmpty: 0,
-	PiecePawn: 1,
+	PieceEmpty:  0,
+	PiecePawn:   1,
 	PieceKnight: 3,
-	PieceRook: 3,
+	PieceRook:   3,
 	PieceBishop: 5,
-	PieceKing: 900000,
-	PieceQueen: 10,
+	PieceKing:   900000,
+	PieceQueen:  10,
 }
 
 func filterSelfCaptures(board *Board, moves []Move) []Move {
@@ -111,7 +111,7 @@ func filterSelfCaptures(board *Board, moves []Move) []Move {
 
 }
 
-func getRookMoves(board *Board, x, y int) []Move  {
+func getRookMoves(board *Board, x, y int) []Move {
 	moves := []Move{}
 
 	for i := y - 1; i >= 0; i-- {
@@ -119,7 +119,6 @@ func getRookMoves(board *Board, x, y int) []Move  {
 		if board.Tiles[i][x].Piece != PieceEmpty {
 			break
 		}
-		
 	}
 
 	for i := y + 1; i < BoardHeight; i++ {
@@ -127,53 +126,50 @@ func getRookMoves(board *Board, x, y int) []Move  {
 		if board.Tiles[i][x].Piece != PieceEmpty {
 			break
 		}
-		
 	}
 
 	for j := x - 1; j >= 0; j-- {
-		moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: y}})
+		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: y}})
 		if board.Tiles[y][j].Piece != PieceEmpty {
 			break
 		}
-		
 	}
 
 	for j := x + 1; j < BoardWidth; j++ {
-		moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: y}})
+		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: y}})
 		if board.Tiles[y][j].Piece != PieceEmpty {
 			break
 		}
-		
 	}
 	return filterSelfCaptures(board, moves)
 }
 
-func getBishopMoves(board *Board, x, y int) []Move  {
+func getBishopMoves(board *Board, x, y int) []Move {
 	moves := []Move{}
 
 	for i, j := y-1, x-1; i >= 0 && j >= 0; i, j = i-1, j-1 {
-		moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: i}})
+		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: i}})
 		if board.Tiles[i][j].Piece != PieceEmpty {
 			break
 		}
 	}
 
 	for i, j := y-1, x+1; i >= 0 && j < BoardWidth; i, j = i-1, j+1 {
-		moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: i}})
+		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: i}})
 		if board.Tiles[i][j].Piece != PieceEmpty {
 			break
 		}
 	}
 
 	for i, j := y+1, x-1; i < BoardHeight && j >= 0; i, j = i+1, j-1 {
-		moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: i}})
+		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: i}})
 		if board.Tiles[i][j].Piece != PieceEmpty {
 			break
 		}
 	}
 
 	for i, j := y+1, x+1; i < BoardHeight && j < BoardWidth; i, j = i+1, j+1 {
-		moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: i}})
+		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: i}})
 		if board.Tiles[i][j].Piece != PieceEmpty {
 			break
 		}
@@ -181,7 +177,7 @@ func getBishopMoves(board *Board, x, y int) []Move  {
 	return filterSelfCaptures(board, moves)
 }
 
-func getKnightMoves(board *Board, x, y int) []Move  {
+func getKnightMoves(board *Board, x, y int) []Move {
 	moves := []Move{}
 
 	directions := []struct{ dx, dy int }{
@@ -199,13 +195,13 @@ func getKnightMoves(board *Board, x, y int) []Move  {
 		newX := x + dir.dx
 		newY := y + dir.dy
 		if newX >= 0 && newX < BoardWidth && newY >= 0 && newY < BoardHeight {
-				moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: newX, Y: newY}})
+			moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: newX, Y: newY}})
 		}
 	}
 	return filterSelfCaptures(board, moves)
 }
 
-func getPawnMoves(board *Board, x, y int, color Color) []Move  {
+func getPawnMoves(board *Board, x, y int, color Color) []Move {
 	moves := []Move{}
 	direction := 1
 	if color == Black {
@@ -214,19 +210,19 @@ func getPawnMoves(board *Board, x, y int, color Color) []Move  {
 
 	newY := y + direction
 	if newY >= 0 && newY < BoardHeight {
-			moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: x, Y: newY}})
+		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: x, Y: newY}})
 	}
 	// Diagonals
 	for _, dx := range []int{-1, 1} {
 		newX := x + dx
 		if newX >= 0 && newX < BoardWidth && newY >= 0 && newY < BoardHeight && board.Tiles[newY][newX].Piece != PieceEmpty {
-			moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: newX, Y: newY}})
+			moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: newX, Y: newY}})
 		}
 	}
 	return filterSelfCaptures(board, moves)
 }
 
-func getKingMoves(board *Board, x, y int) []Move  {
+func getKingMoves(board *Board, x, y int) []Move {
 	moves := []Move{}
 
 	directions := []struct{ dx, dy int }{
@@ -244,7 +240,7 @@ func getKingMoves(board *Board, x, y int) []Move  {
 		newX := x + dir.dx
 		newY := y + dir.dy
 		if newX >= 0 && newX < BoardWidth && newY >= 0 && newY < BoardHeight {
-			moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: newX, Y: newY}})
+			moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: newX, Y: newY}})
 		}
 	}
 	return filterSelfCaptures(board, moves)
@@ -302,14 +298,14 @@ func scoreBoard(board *Board, color Color) int {
 
 func generateMovesForColor(board *Board, color Color) []Move {
 	moves := make([]Move, 0, 64)
-	for y := 0; y < BoardHeight; y++ {
-			for x := 0; x < BoardWidth; x++ {
-					t := board.Tiles[y][x]
-					if t.Piece == PieceEmpty || t.Color != color {
-							continue
-					}
-					moves = append(moves, getMoves(board, x, y)...)
+	for y := range BoardHeight {
+		for x := range BoardWidth {
+			t := board.Tiles[y][x]
+			if t.Piece == PieceEmpty || t.Color != color {
+				continue
 			}
+			moves = append(moves, getMoves(board, x, y)...)
+		}
 	}
 	return moves
 }
@@ -317,35 +313,34 @@ func generateMovesForColor(board *Board, color Color) []Move {
 const INF = 1_000_000_000
 
 func alphaBeta(board *Board, color Color, depth int, alpha, beta int) int {
-    if depth == 0 {
-        return scoreBoard(board, color) // eval from 'color' perspective
-    }
+	if depth == 0 {
+		return scoreBoard(board, color) // eval from 'color' perspective
+	}
 
-    moves := generateMovesForColor(board, color)
-    if len(moves) == 0 {
-        return scoreBoard(board, color)
-    }
+	moves := generateMovesForColor(board, color)
+	if len(moves) == 0 {
+		return scoreBoard(board, color)
+	}
 
-    best := -INF
-    for _, move := range moves {
-        nb := *board
-        applyMove(&nb, move)
+	best := -INF
+	for _, move := range moves {
+		nb := *board
+		applyMove(&nb, move)
 
-        score := -alphaBeta(&nb, oppositeColor(color), depth-1, -beta, -alpha)
+		score := -alphaBeta(&nb, oppositeColor(color), depth-1, -beta, -alpha)
 
-        if score > best {
-            best = score
-        }
-        if score > alpha {
-            alpha = score
-        }
-        if alpha >= beta {
-            break
-        }
-    }
-    return best
+		if score > best {
+			best = score
+		}
+		if score > alpha {
+			alpha = score
+		}
+		if alpha >= beta {
+			break
+		}
+	}
+	return best
 }
-
 
 func getRandomMove(board *Board, color Color) (Move, bool) {
 	moves := []Move{}
@@ -365,7 +360,7 @@ func getRandomMove(board *Board, color Color) (Move, bool) {
 func getBestMove(board *Board, color Color, depth int) (Move, bool) {
 	moves := generateMovesForColor(board, color)
 	if len(moves) == 0 {
-			return Move{}, false
+		return Move{}, false
 	}
 
 	bestScore := -INF
@@ -375,27 +370,26 @@ func getBestMove(board *Board, color Color, depth int) (Move, bool) {
 	beta := INF
 
 	for _, mv := range moves {
-			nb := *board
-			applyMove(&nb, mv)
+		nb := *board
+		applyMove(&nb, mv)
 
-			score := -alphaBeta(&nb, oppositeColor(color), depth-1, -beta, -alpha)
+		score := -alphaBeta(&nb, oppositeColor(color), depth-1, -beta, -alpha)
 
-			if score > bestScore {
-					bestScore = score
-					bestMove = mv
-			}
-			if score > alpha {
-					alpha = score
-			}
+		if score > bestScore {
+			bestScore = score
+			bestMove = mv
+		}
+		if score > alpha {
+			alpha = score
+		}
 	}
 
 	return bestMove, true
 }
 
-
 func makeTurn(board *Board) {
 	board.turn++
-	if board.turn % 2 == 0 {
+	if board.turn%2 == 0 {
 		move, ok := getBestMove(board, White, 3)
 		if ok {
 			applyMove(board, move)
@@ -406,5 +400,4 @@ func makeTurn(board *Board) {
 			applyMove(board, move)
 		}
 	}
-
 }
