@@ -1,6 +1,7 @@
 # Chess Battles
 
 ```sh
+cd src
 go run .
 ```
 

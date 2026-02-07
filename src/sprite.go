@@ -55,7 +55,7 @@ var Sprites map[SpriteID]image.Image
 
 func init() {
 
-	imgAtlas, _, err := ebitenutil.NewImageFromFile("assets/roupiks/atlas.png")
+	imgAtlas, _, err := ebitenutil.NewImageFromFile(SpriteAtlasPath)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -1,34 +1,20 @@
 package main
 
-import (
-	"math/rand"
-)
+import "math/rand"
 
-type Game struct {
-	Board1  Board
-	Board2  Board
-	Player1 Player
-	Player2 Player
-	Events  []Event
-}
-
-func NewGame() Game {
-	return Game{
-		Board1: NewBoard(8, 8, 50, 50),
-		Board2: NewBoard(8, 8, 300, 50),
-	}
+type Logic struct {
+	Board1 Board
+	Board2 Board
 }
 
 type Board struct {
-	ScreenX, ScreenY int // pixel location on screen
-	Width, Height    int // number of tiles ()
-	Tiles            [][]Tile
+	Tiles [][]Tile
 }
 
-func NewBoard(width, height int, screenX, screenY int) Board {
-	tiles := make([][]Tile, height)
+func NewBoard() Board {
+	tiles := make([][]Tile, BoardHeight)
 	for i := range tiles {
-		tiles[i] = make([]Tile, width)
+		tiles[i] = make([]Tile, BoardWidth)
 	}
 
 	for i := range tiles {
@@ -41,11 +27,7 @@ func NewBoard(width, height int, screenX, screenY int) Board {
 	}
 
 	return Board{
-		ScreenX: screenX,
-		ScreenY: screenY,
-		Width:   width,
-		Height:  height,
-		Tiles:   tiles,
+		Tiles: tiles,
 	}
 
 }

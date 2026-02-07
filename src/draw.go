@@ -2,11 +2,11 @@ package main
 
 import "github.com/hajimehoshi/ebiten/v2"
 
-func (board *Board) draw(screen *ebiten.Image) {
-	for y := 0; y < board.Height; y++ {
-		for x := 0; x < board.Width; x++ {
-			px := float64((x * TileSize) + board.ScreenX)
-			py := float64((y * TileSize) + board.ScreenY)
+func (graphicsBoard *GraphicsBoard) draw(screen *ebiten.Image, board *Board) {
+	for y := 0; y < BoardHeight; y++ {
+		for x := 0; x < BoardWidth; x++ {
+			px := float64((x * TileSize) + graphicsBoard.ScreenX)
+			py := float64((y * TileSize) + graphicsBoard.ScreenY)
 
 			opTile := &ebiten.DrawImageOptions{}
 			opTile.GeoM.Translate(px, py)

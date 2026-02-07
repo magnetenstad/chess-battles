@@ -10,18 +10,20 @@ import (
 
 func (g *Game) Update() error {
 	// players := []*Player{&g.Player1, &g.Player2}
-	boards := []*Board{&g.Board1, &g.Board2}
+	boards := []*Board{&g.Logic.Board1, &g.Logic.Board2}
+	graphicsBoards := []*GraphicsBoard{&g.Graphics.Board1, &g.Graphics.Board2}
 
 	for i := range boards {
 		board := boards[i]
+		graphicsBoard := graphicsBoards[i]
 
 		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 			x, y := ebiten.CursorPosition()
-			handleLeftClick(g, board, x, y)
+			handleLeftClick(g, graphicsBoard, x, y)
 		}
 		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonRight) {
 			x, y := ebiten.CursorPosition()
-			handleRightClick(g, board, x, y)
+			handleRightClick(g, graphicsBoard, x, y)
 		}
 		events := g.Events
 		g.Events = nil
@@ -33,7 +35,7 @@ func (g *Game) Update() error {
 	return nil
 }
 
-func handleLeftClick(game *Game, board *Board, x, y int) {
+func handleLeftClick(game *Game, board *GraphicsBoard, x, y int) {
 	x, y, ok := ScreenToTile(board, x, y)
 	if !ok {
 		return
@@ -41,7 +43,7 @@ func handleLeftClick(game *Game, board *Board, x, y int) {
 	game.Events = append(game.Events, Event{kind: EventDelete, DeleteEvent: DeleteEvent{x: x, y: y}})
 }
 
-func handleRightClick(game *Game, board *Board, x, y int) {
+func handleRightClick(game *Game, board *GraphicsBoard, x, y int) {
 	x, y, ok := ScreenToTile(board, x, y)
 	if !ok {
 		return
@@ -50,8 +52,8 @@ func handleRightClick(game *Game, board *Board, x, y int) {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.Board1.draw(screen)
-	g.Board2.draw(screen)
+	g.Graphics.Board1.draw(screen, &g.Logic.Board1)
+	g.Graphics.Board2.draw(screen, &g.Logic.Board2)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
