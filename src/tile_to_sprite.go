@@ -12,6 +12,10 @@ var PieceToWhiteSprite = map[Piece]SpriteID{
 	PieceBishop: SpriteBishopWhite,
 	PieceKing:   SpriteKingWhite,
 	PieceQueen:  SpriteQueenWhite,
+	PieceBig:    SpriteQueenWhite,
+	PieceBigTR:  SpriteQueenWhite,
+	PieceBigBL:  SpriteQueenWhite,
+	PieceBigBR:  SpriteQueenWhite,
 }
 
 var PieceToBlackSprite = map[Piece]SpriteID{
@@ -21,4 +25,8 @@ var PieceToBlackSprite = map[Piece]SpriteID{
 	PieceBishop: SpriteBishopBlack,
 	PieceKing:   SpriteKingBlack,
 	PieceQueen:  SpriteQueenBlack,
+	PieceBig:    SpriteQueenBlack,
+	PieceBigTR:  SpriteQueenBlack,
+	PieceBigBL:  SpriteQueenBlack,
+	PieceBigBR:  SpriteQueenBlack,
 }

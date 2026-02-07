@@ -39,6 +39,10 @@ func (g *Game) Update() error {
 	}
 
 	for i := range boards {
+		boards[i].UpdateEffects()
+	}
+
+	for i := range boards {
 		board := boards[i]
 		graphicsBoard := graphicsBoards[i]
 

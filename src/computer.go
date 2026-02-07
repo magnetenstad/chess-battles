@@ -8,6 +8,10 @@ var pieceScores = map[Piece]int{
 	PieceBishop: 5,
 	PieceKing:   900000,
 	PieceQueen:  10,
+	PieceBig:    12,
+	PieceBigTR:  0,
+	PieceBigBL:  0,
+	PieceBigBR:  0,
 }
 
 func advanceFor(color Color, y int) int {
@@ -22,7 +26,7 @@ func scoreBoard(board *Board, color Color) int {
 	for y := range BoardHeight {
 		for x := range BoardWidth {
 			tile := board.Tiles[y][x]
-			if tile.Piece == PieceEmpty {
+			if tile.Piece == PieceEmpty || isBigPiece(tile.Piece) && !isBigOrigin(tile.Piece) {
 				continue
 			} else if tile.Color == color {
 				score += pieceScores[tile.Piece]

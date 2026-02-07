@@ -32,10 +32,10 @@ func HandleEvent(board *Board, event Event) {
 }
 
 func HandleDelete(board *Board, event DeleteEvent) {
-	board.Tiles[event.y][event.x].Piece = PieceEmpty
+	removePieceAt(board, event.x, event.y)
 	board.shakeDuration = 5
 }
 
 func HandleSpawn(board *Board, event SpawnEvent) {
-	board.Tiles[event.y][event.x] = event.Tile
+	spawnPieceAtLocation(board, event.x, event.y, event.Tile.Piece, event.Tile.Color)
 }

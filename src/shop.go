@@ -14,6 +14,7 @@ var pieces = []Piece{
 	PieceRook,
 	PieceKing,
 	PieceQueen,
+	PieceBig,
 }
 
 func GetPositionForPiece(piece Piece) (float64, float64) {

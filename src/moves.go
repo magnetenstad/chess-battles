@@ -114,22 +114,21 @@ func getPawnMoves(board *Board, x, y int, color Color) []Move {
 
 	newY := y + direction
 	if newY >= 0 && newY < BoardHeight && board.Tiles[newY][x].Piece == PieceEmpty {
-			moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: x, Y: newY}})
+		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: x, Y: newY}})
 	}
 	// Diagonals
 	for _, dx := range []int{-1, 1} {
 		newX := x + dx
 		if newX < 0 || newX >= BoardWidth || newY < 0 || newY >= BoardHeight {
 			continue
-	}	
-	tile := board.Tiles[newY][newX]
+		}
+		tile := board.Tiles[newY][newX]
 		if tile.Piece != PieceEmpty && tile.Color != color {
 			moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: newX, Y: newY}})
 		}
 	}
 	return filterSelfCaptures(board, moves)
 }
-
 
 func getKingMoves(board *Board, x, y int) []Move {
 	moves := []Move{}
@@ -155,6 +154,64 @@ func getKingMoves(board *Board, x, y int) []Move {
 	return filterSelfCaptures(board, moves)
 }
 
+func getBigMoves(board *Board, x, y int) []Move {
+	moves := []Move{}
+	color := board.Tiles[y][x].Color
+	directions := []struct{ dx, dy int }{
+		{dx: -1, dy: -1},
+		{dx: -1, dy: 0},
+		{dx: -1, dy: 1},
+		{dx: 0, dy: -1},
+		{dx: 0, dy: 1},
+		{dx: 1, dy: -1},
+		{dx: 1, dy: 0},
+		{dx: 1, dy: 1},
+	}
+
+	for _, dir := range directions {
+		nx := x + dir.dx
+		ny := y + dir.dy
+		if nx < 0 || nx+1 >= BoardWidth {
+			if nx < 0 {
+				nx = BoardWidth - 2
+			} else {
+				nx = 0
+			}
+		}
+		if ny < 0 || ny+1 >= BoardHeight {
+			if ny < 0 {
+				ny = BoardHeight - 2
+			} else {
+				ny = 0
+			}
+		}
+		if canPlaceBigMove(board, x, y, nx, ny, color) {
+			moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: nx, Y: ny}})
+		}
+	}
+	return moves
+}
+
+func canPlaceBigMove(board *Board, fromX, fromY, toX, toY int, color Color) bool {
+	for dy := 0; dy < 2; dy++ {
+		for dx := 0; dx < 2; dx++ {
+			tx := toX + dx
+			ty := toY + dy
+			if tx >= fromX && tx <= fromX+1 && ty >= fromY && ty <= fromY+1 {
+				continue
+			}
+			tile := board.Tiles[ty][tx]
+			if tile.Piece == PieceEmpty {
+				continue
+			}
+			if tile.Color == color {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 func getMoves(board *Board, x, y int) []Move {
 	tile := board.Tiles[y][x]
 	switch tile.Piece {
@@ -170,6 +227,10 @@ func getMoves(board *Board, x, y int) []Move {
 		return append(getRookMoves(board, x, y), getBishopMoves(board, x, y)...)
 	case PieceKing:
 		return getKingMoves(board, x, y)
+	case PieceBig:
+		return getBigMoves(board, x, y)
+	case PieceBigTR, PieceBigBL, PieceBigBR:
+		return []Move{}
 	default:
 		return []Move{}
 	}
