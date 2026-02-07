@@ -10,6 +10,14 @@ var pieceScores = map[Piece]int{
 	PieceQueen:  10,
 }
 
+func advanceFor(color Color, y int) int {
+	if color == White {
+		return y
+	}
+	return (BoardHeight - 1) - y 
+}
+
+
 func scoreBoard(board *Board, color Color) int {
 	score := 0
 	for y := range BoardHeight {

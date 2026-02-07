@@ -176,7 +176,7 @@ func getMoves(board *Board, x, y int) []Move {
 }
 
 func generateMovesForColor(board *Board, color Color) []Move {
-	moves := make([]Move, 0, 64)
+	moves := []Move{}
 	for y := range BoardHeight {
 		for x := range BoardWidth {
 			t := board.Tiles[y][x]

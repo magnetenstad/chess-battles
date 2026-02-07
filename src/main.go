@@ -71,7 +71,7 @@ func main() {
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("Hello, Chess Battles!")
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
-	ebiten.SetTPS(1)
+	ebiten.SetTPS(60)
 	game := NewGame()
 	if err := ebiten.RunGame(&game); err != nil {
 		log.Fatal(err)

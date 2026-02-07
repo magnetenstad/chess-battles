@@ -15,26 +15,20 @@ type Board struct {
 }
 
 func setupPawnsVsRooks(board *Board) {
-	// --- Black pawns in upper fields ---
-	// Fill first two ranks
-	for y := range 2 {
+
+	for y := range 1 {
 		for x := range BoardWidth {
 			board.Tiles[y][x] = Tile{
-				Piece: PiecePawn,
+				Piece: PieceKnight,
 				Color: White,
 			}
 		}
 	}
 
-	// --- White rooks at the bottom ---
+
 	bottom := BoardHeight - 1
 
 	board.Tiles[bottom][0] = Tile{
-		Piece: PieceQueen,
-		Color: Black,
-	}
-
-	board.Tiles[bottom][BoardWidth-1] = Tile{
 		Piece: PieceQueen,
 		Color: Black,
 	}
@@ -120,19 +114,27 @@ func applyMove(board *Board, move Move) {
 	tile := board.Tiles[move.from.Y][move.from.X]
 	board.Tiles[move.to.Y][move.to.X] = tile
 	board.Tiles[move.from.Y][move.from.X] = Tile{Piece: PieceEmpty}
+	if tile.Piece == PiecePawn && (move.to.Y == 0 || move.to.Y == BoardHeight-1) {
+		board.Tiles[move.to.Y][move.to.X].Piece = PieceQueen
+	}
+
 }
 
+var turnEveryFrame = 5
+
 func makeTurn(board *Board) {
-	board.turn++
-	if board.turn%2 == 0 {
-		move, ok := getBestMove(board, White, 6)
+	
+	switch board.turn % (turnEveryFrame * 2) {
+case 0:
+		move, ok := getBestMove(board, White, 3)
 		if ok {
 			applyMove(board, move)
 		}
-	} else {
-		move, ok := getBestMove(board, Black, 6)
+	case turnEveryFrame:
+		move, ok := getBestMove(board, Black, 3)
 		if ok {
 			applyMove(board, move)
 		}
 	}
+	board.turn++
 }
