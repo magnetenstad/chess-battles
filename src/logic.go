@@ -19,7 +19,7 @@ func setupPawnsVsRooks(board *Board) {
 	for y := range 1 {
 		for x := range BoardWidth {
 			board.Tiles[y][x] = Tile{
-				Piece: PieceKnight,
+				Piece: PiecePawn,
 				Color: White,
 			}
 		}
