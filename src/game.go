@@ -1,10 +1,10 @@
 package main
 
 type Game struct {
-	Logic       Logic
-	Graphics    Graphics
-	Events      []GameEvent
-	EventSocket *EventSocket
+	Logic     Logic
+	Graphics  Graphics
+	Events    []GameEvent
+	Transport *WebRTCTransport
 }
 
 func NewGame() Game {
@@ -26,8 +26,8 @@ func NewGame() Game {
 	}
 }
 
-func (g *Game) SetEventSocket(socket *EventSocket) {
-	g.EventSocket = socket
+func (g *Game) SetTransport(transport *WebRTCTransport) {
+	g.Transport = transport
 }
 
 func (g *Game) BoardForIndex(index int) (*Board, bool) {

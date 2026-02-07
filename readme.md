@@ -5,32 +5,36 @@ cd src
 go run .
 ```
 
-## Multiplayer Event Sync (WebSocket)
+## Multiplayer Event Sync (P2P WebRTC, No Hosted Relay)
 
-Start a relay server:
+This mode uses WebRTC data channels with STUN and manual signaling.
 
-```sh
-cd src
-go run . --relay :8080
-```
-
-Run a game instance connected to a shared room codeword:
+### 1) Host creates an offer
 
 ```sh
 cd src
-go run . --ws-url ws://localhost:8080/ws --codeword my-room
+go run . --p2p-host --codeword my-room
 ```
 
-Run the same command on another instance with the same `--codeword` to sync events.
+Copy the printed offer string and send it to your friend.
 
-### No firewall changes
-
-Direct peer-to-peer over raw WebSocket is not realistic behind NAT without opening inbound ports.
-Use a relay server on a public host and have both game clients connect outbound:
+### 2) Joiner creates an answer
 
 ```sh
-go run . --ws-url wss://your-relay.example/ws --codeword my-room
+cd src
+go run . --p2p-join --codeword my-room --p2p-offer "<PASTE_OFFER>"
 ```
+
+Copy the printed answer string and send it back to the host.
+
+### 3) Host pastes the answer
+
+The host process prompts for `ANSWER`; paste it and press Enter.
+
+Notes:
+- Works best on same Wi-Fi or NATs that allow UDP hole punching.
+- Some networks still block direct P2P.
+- You can override STUN servers with `--stun-servers`.
 
 Game engine docs: <https://ebitengine.org/>
 
