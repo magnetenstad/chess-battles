@@ -16,25 +16,28 @@ type Game struct {
 
 func NewGame() Game {
 	return Game{
-		Board1: NewBoard(8, 8),
-		Board2: NewBoard(8, 8),
+		Board1: NewBoard(8, 8, 50, 50),
+		Board2: NewBoard(8, 8, 300, 50),
 	}
 }
 
 type Board struct {
-	Width, Height int
-	Tiles         [][]Tile
+	ScreenX, ScreenY int // pixel location on screen
+	Width, Height    int // number of tiles ()
+	Tiles            [][]Tile
 }
 
-func NewBoard(width int, height int) Board {
+func NewBoard(width, height int, screenX, screenY int) Board {
 	tiles := make([][]Tile, height)
 	for i := range tiles {
 		tiles[i] = make([]Tile, width)
 	}
 	board := Board{
-		Width:  width,
-		Height: height,
-		Tiles:  tiles,
+		ScreenX: screenX,
+		ScreenY: screenY,
+		Width:   width,
+		Height:  height,
+		Tiles:   tiles,
 	}
 
 	for i := range tiles {

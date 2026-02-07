@@ -6,7 +6,6 @@ var TileToSprite = map[Color]map[Piece]SpriteID{
 }
 
 var PieceToWhiteSprite = map[Piece]SpriteID{
-	None:        SpriteKingBlack, // TODO, fix
 	PiecePawn:   SpritePawnWhite,
 	PieceKnight: SpriteKnightWhite,
 	PieceRook:   SpriteRookWhite,
@@ -16,7 +15,6 @@ var PieceToWhiteSprite = map[Piece]SpriteID{
 }
 
 var PieceToBlackSprite = map[Piece]SpriteID{
-	None:        SpriteKingBlack, // TODO, fix
 	PiecePawn:   SpritePawnBlack,
 	PieceKnight: SpriteKnightBlack,
 	PieceRook:   SpriteRookBlack,

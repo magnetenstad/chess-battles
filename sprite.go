@@ -10,7 +10,9 @@ import (
 type SpriteID string
 
 const (
-	SpriteBoard SpriteID = "board"
+	SpriteBoard     SpriteID = "board"
+	SpriteTileWhite SpriteID = "tile_white"
+	SpriteTileBlack SpriteID = "tile_black"
 
 	SpriteKingBlack   SpriteID = "king_black"
 	SpriteQueenBlack  SpriteID = "queen_black"
@@ -30,7 +32,9 @@ const (
 const t = 16
 
 var atlas = map[SpriteID]image.Rectangle{
-	SpriteBoard: image.Rect(t*0, t*0, t*10, t*9),
+	SpriteBoard:     image.Rect(t*0, t*0, t*10, t*9),
+	SpriteTileWhite: image.Rect(t*1, t*12, t*2, t*13),
+	SpriteTileBlack: image.Rect(t*2, t*12, t*3, t*13),
 
 	SpriteKingBlack:   image.Rect(t*1, t*13, t*2, t*14),
 	SpriteQueenBlack:  image.Rect(t*2, t*13, t*3, t*14),
@@ -57,7 +61,9 @@ func init() {
 	}
 
 	Sprites = map[SpriteID]image.Image{
-		SpriteBoard: imgAtlas.SubImage(atlas[SpriteBoard]),
+		SpriteBoard:     imgAtlas.SubImage(atlas[SpriteBoard]),
+		SpriteTileBlack: imgAtlas.SubImage(atlas[SpriteTileBlack]),
+		SpriteTileWhite: imgAtlas.SubImage(atlas[SpriteTileWhite]),
 
 		SpriteKingBlack:   imgAtlas.SubImage(atlas[SpriteKingBlack]),
 		SpriteQueenBlack:  imgAtlas.SubImage(atlas[SpriteQueenBlack]),
