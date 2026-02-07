@@ -9,6 +9,9 @@ import (
 )
 
 func (g *Game) Update() error {
+
+	g.UpdateShop()
+
 	// players := []*Player{&g.Player1, &g.Player2}
 	boards := []*Board{&g.Logic.Board1, &g.Logic.Board2}
 	graphicsBoards := []*GraphicsBoard{&g.Graphics.Board1, &g.Graphics.Board2}
@@ -52,8 +55,9 @@ func handleRightClick(game *Game, board *GraphicsBoard, x, y int) {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.Graphics.draw(screen, &g.Graphics.Board1, &g.Logic.Board1)
-	g.Graphics.draw(screen, &g.Graphics.Board2, &g.Logic.Board2)
+	g.Graphics.DrawBoard(screen, &g.Graphics.Board1, &g.Logic.Board1)
+	g.Graphics.DrawBoard(screen, &g.Graphics.Board2, &g.Logic.Board2)
+	g.Graphics.DrawShop(screen, &g.Shop)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {

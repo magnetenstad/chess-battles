@@ -4,6 +4,7 @@ import (
 	"image"
 	"log"
 
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
@@ -13,6 +14,7 @@ const (
 	SpriteBoard     SpriteID = "board"
 	SpriteTileWhite SpriteID = "tile_white"
 	SpriteTileBlack SpriteID = "tile_black"
+	SpriteHover     SpriteID = "tile_hover"
 
 	SpriteKingBlack   SpriteID = "king_black"
 	SpriteQueenBlack  SpriteID = "queen_black"
@@ -35,6 +37,7 @@ var atlas = map[SpriteID]image.Rectangle{
 	SpriteBoard:     image.Rect(t*0, t*0, t*10, t*9),
 	SpriteTileWhite: image.Rect(t*1, t*12, t*2, t*13),
 	SpriteTileBlack: image.Rect(t*2, t*12, t*3, t*13),
+	SpriteHover:     image.Rect(t*3, t*12, t*4, t*13),
 
 	SpriteKingBlack:   image.Rect(t*1, t*13, t*2, t*14),
 	SpriteQueenBlack:  image.Rect(t*2, t*13, t*3, t*14),
@@ -51,7 +54,7 @@ var atlas = map[SpriteID]image.Rectangle{
 	SpritePawnWhite:   image.Rect(t*6, t*14, t*7, t*15),
 }
 
-var Sprites map[SpriteID]image.Image
+var Sprites map[SpriteID]*ebiten.Image
 
 func init() {
 
@@ -60,23 +63,24 @@ func init() {
 		log.Fatal(err)
 	}
 
-	Sprites = map[SpriteID]image.Image{
-		SpriteBoard:     imgAtlas.SubImage(atlas[SpriteBoard]),
-		SpriteTileBlack: imgAtlas.SubImage(atlas[SpriteTileBlack]),
-		SpriteTileWhite: imgAtlas.SubImage(atlas[SpriteTileWhite]),
+	Sprites = map[SpriteID]*ebiten.Image{
+		SpriteBoard:     imgAtlas.SubImage(atlas[SpriteBoard]).(*ebiten.Image),
+		SpriteTileBlack: imgAtlas.SubImage(atlas[SpriteTileBlack]).(*ebiten.Image),
+		SpriteTileWhite: imgAtlas.SubImage(atlas[SpriteTileWhite]).(*ebiten.Image),
+		SpriteHover:     imgAtlas.SubImage(atlas[SpriteHover]).(*ebiten.Image),
 
-		SpriteKingBlack:   imgAtlas.SubImage(atlas[SpriteKingBlack]),
-		SpriteQueenBlack:  imgAtlas.SubImage(atlas[SpriteQueenBlack]),
-		SpriteRookBlack:   imgAtlas.SubImage(atlas[SpriteRookBlack]),
-		SpriteBishopBlack: imgAtlas.SubImage(atlas[SpriteBishopBlack]),
-		SpriteKnightBlack: imgAtlas.SubImage(atlas[SpriteKnightBlack]),
-		SpritePawnBlack:   imgAtlas.SubImage(atlas[SpritePawnBlack]),
+		SpriteKingBlack:   imgAtlas.SubImage(atlas[SpriteKingBlack]).(*ebiten.Image),
+		SpriteQueenBlack:  imgAtlas.SubImage(atlas[SpriteQueenBlack]).(*ebiten.Image),
+		SpriteRookBlack:   imgAtlas.SubImage(atlas[SpriteRookBlack]).(*ebiten.Image),
+		SpriteBishopBlack: imgAtlas.SubImage(atlas[SpriteBishopBlack]).(*ebiten.Image),
+		SpriteKnightBlack: imgAtlas.SubImage(atlas[SpriteKnightBlack]).(*ebiten.Image),
+		SpritePawnBlack:   imgAtlas.SubImage(atlas[SpritePawnBlack]).(*ebiten.Image),
 
-		SpriteKingWhite:   imgAtlas.SubImage(atlas[SpriteKingWhite]),
-		SpriteQueenWhite:  imgAtlas.SubImage(atlas[SpriteQueenWhite]),
-		SpriteRookWhite:   imgAtlas.SubImage(atlas[SpriteRookWhite]),
-		SpriteBishopWhite: imgAtlas.SubImage(atlas[SpriteBishopWhite]),
-		SpriteKnightWhite: imgAtlas.SubImage(atlas[SpriteKnightWhite]),
-		SpritePawnWhite:   imgAtlas.SubImage(atlas[SpritePawnWhite]),
+		SpriteKingWhite:   imgAtlas.SubImage(atlas[SpriteKingWhite]).(*ebiten.Image),
+		SpriteQueenWhite:  imgAtlas.SubImage(atlas[SpriteQueenWhite]).(*ebiten.Image),
+		SpriteRookWhite:   imgAtlas.SubImage(atlas[SpriteRookWhite]).(*ebiten.Image),
+		SpriteBishopWhite: imgAtlas.SubImage(atlas[SpriteBishopWhite]).(*ebiten.Image),
+		SpriteKnightWhite: imgAtlas.SubImage(atlas[SpriteKnightWhite]).(*ebiten.Image),
+		SpritePawnWhite:   imgAtlas.SubImage(atlas[SpritePawnWhite]).(*ebiten.Image),
 	}
 }
