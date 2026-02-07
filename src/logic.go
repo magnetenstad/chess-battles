@@ -93,6 +93,16 @@ type Move struct {
 	to Position
 }
 
+var pieceScores = map[Piece]int{
+	PieceEmpty: 0,
+	PiecePawn: 1,
+	PieceKnight: 3,
+	PieceRook: 3,
+	PieceBishop: 5,
+	PieceKing: 900000,
+	PieceQueen: 10,
+}
+
 func filterSelfCaptures(board *Board, moves []Move) []Move {
 	filtered := []Move{}
 	for _, move := range moves {
@@ -278,69 +288,73 @@ func applyMove(board *Board, move Move) {
 	board.Tiles[move.from.Y][move.from.X] = Tile{Piece: PieceEmpty}
 }
 
-/** Shitty minimax implementation, but it works for now. */
-func scoreMove(board *Board, move Move, depth int) int {
-	toTile := board.Tiles[move.to.Y][move.to.X]
-	scoreNow := 0
-	switch toTile.Piece {
-	case PiecePawn:
-		scoreNow = 1
-	case PieceKnight, PieceBishop:
-		scoreNow = 3
-	case PieceRook:
-		scoreNow = 5
-	case PieceQueen:
-		scoreNow = 9
-	case PieceKing:
-		scoreNow = 1000
-	default:
-		scoreNow = 0
-	}
-	if (depth > 0) {
-		// deep copy
-		boardCopy := *board
-		nextColor := oppositeColor(board.Tiles[move.from.Y][move.from.X].Color)
-		applyMove(board, move)
-		nextMove, ok := getBestMove(board, nextColor, depth-1)
-		*board = boardCopy
-		if ok {
-		return scoreNow - scoreMove(board, nextMove, depth-1) 
-		}
-		return scoreNow
-	}
-	return scoreNow
-}
-
-func getBestMove(board *Board, Color Color, depth int) (Move, bool) {
-	bestMove := Move{}
-	bestScore := -1
+func scoreBoard(board *Board, color Color) int {
+	score := 0
 	for y := range BoardHeight {
 		for x := range BoardWidth {
 			tile := board.Tiles[y][x]
-			if tile.Piece != PieceEmpty && tile.Color == Color {
-				moves := getMoves(board, x, y)
-				for _, move := range moves {
-					score := scoreMove(board, move, depth)
-					if score > bestScore {
-						bestScore = score
-						bestMove = move
-					}
-				}
+			if tile.Piece == PieceEmpty {
+				continue
+			} else if tile.Color == color {
+				score += pieceScores[tile.Piece]
+			} else if tile.Color == oppositeColor(color) {
+				score -= pieceScores[tile.Piece]
 			}
 		}
 	}
-	return bestMove, bestScore >= 0
+	return score
+}
+
+func getRandomMove(board *Board, color Color) (Move, bool) {
+	moves := []Move{}
+	for y := 0; y < BoardHeight; y++ {
+		for x := 0; x < BoardWidth; x++ {
+			if board.Tiles[y][x].Color == color {
+				moves = append(moves, getMoves(board, x, y)...)
+			}
+		}
+	}
+	if len(moves) == 0 {
+		return Move{}, false
+	}
+	return moves[rand.Intn(len(moves))], true
+}
+
+func getBestMove(board *Board, color Color, depth int) (Move, bool) {
+	moves := []Move{}
+	for y := 0; y < BoardHeight; y++ {
+		for x := 0; x < BoardWidth; x++ {
+			if board.Tiles[y][x].Color == color {
+				moves = append(moves, getMoves(board, x, y)...)
+			}
+		}
+	}
+	bestScore := -999999
+	var bestMove Move
+	for i := range moves {
+		move := moves[i]
+		newBoard := *board
+		applyMove(&newBoard, move)
+		newScore := scoreBoard(&newBoard, color)
+		if newScore > bestScore {
+			bestMove = move
+		}
+	}
+	if bestScore == -999999 {
+		return Move{}, false
+	}
+	return bestMove, true
 }
 
 func makeTurn(board *Board) {
 	board.turn++
 	if board.turn % 2 == 0 {
-		move, ok := getBestMove(board, White, 2)
+		move, ok := getRandomMove(board, White)
 		if ok {
 			applyMove(board, move)
 		}
 	} else {
-		move, ok := getBestMove(board, Black, 2)
+		move, ok := getRandomMove(board, Black)
 		if ok {
 			applyMove(board, move)
 		}
