@@ -14,12 +14,12 @@ func NewGame() Game {
 		},
 		Graphics: Graphics{
 			Board1: GraphicsBoard{
-				ScreenX: 50,
-				ScreenY: 50,
+				ScreenX: TileSize,
+				ScreenY: TileSize,
 			},
 			Board2: GraphicsBoard{
-				ScreenX: 300,
-				ScreenY: 50,
+				ScreenX: TileSize + BoardWidth*TileSize + TileSize,
+				ScreenY: TileSize,
 			},
 		},
 	}
