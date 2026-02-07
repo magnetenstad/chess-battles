@@ -12,6 +12,7 @@ type Logic struct {
 type Board struct {
 	Tiles [BoardHeight][BoardWidth]Tile
 	Turn  int
+	shakeDuration int
 }
 
 func (board *Board) Color() Color {
