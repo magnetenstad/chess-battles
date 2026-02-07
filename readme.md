@@ -1,7 +1,7 @@
 # Chess Battles
 
 ```sh
-go run main.go
+go run .
 ```
 
 Game engine docs: <https://ebitengine.org/>

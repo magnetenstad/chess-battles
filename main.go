@@ -5,18 +5,7 @@ import (
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
-	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
-
-var img *ebiten.Image
-
-func init() {
-	var err error
-	img, _, err = ebitenutil.NewImageFromFile("assets/roupiks/atlas.png")
-	if err != nil {
-		log.Fatal(err)
-	}
-}
 
 type Game struct{}
 
@@ -25,7 +14,14 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	screen.DrawImage(img, nil)
+
+	screen.DrawImage(Sprites[SpriteBoard].(*ebiten.Image), nil)
+
+	op := &ebiten.DrawImageOptions{}
+	op.GeoM.Translate(16, 16)
+	op.GeoM.Scale(5, 8)
+
+	screen.DrawImage(Sprites[SpriteKingWhite].(*ebiten.Image), op)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
