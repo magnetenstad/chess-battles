@@ -93,6 +93,19 @@ type Move struct {
 	to Position
 }
 
+func filterSelfCaptures(board *Board, moves []Move) []Move {
+	filtered := []Move{}
+	for _, move := range moves {
+		toTile := board.Tiles[move.to.Y][move.to.X]
+		fromTile := board.Tiles[move.from.Y][move.from.X]
+		if toTile.Piece == PieceEmpty || toTile.Color != fromTile.Color {
+			filtered = append(filtered, move)
+		}
+	}
+	return filtered
+
+}
+
 func getRookMoves(board *Board, x, y int) []Move  {
 	moves := []Move{}
 
@@ -127,7 +140,7 @@ func getRookMoves(board *Board, x, y int) []Move  {
 		}
 		
 	}
-	return moves
+	return filterSelfCaptures(board, moves)
 }
 
 func getBishopMoves(board *Board, x, y int) []Move  {
@@ -160,7 +173,7 @@ func getBishopMoves(board *Board, x, y int) []Move  {
 			break
 		}
 	}
-	return moves
+	return filterSelfCaptures(board, moves)
 }
 
 func getKnightMoves(board *Board, x, y int) []Move  {
@@ -184,7 +197,7 @@ func getKnightMoves(board *Board, x, y int) []Move  {
 				moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: newX, Y: newY}})
 		}
 	}
-	return moves
+	return filterSelfCaptures(board, moves)
 }
 
 func getPawnMoves(board *Board, x, y int, color Color) []Move  {
@@ -205,7 +218,7 @@ func getPawnMoves(board *Board, x, y int, color Color) []Move  {
 			moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: newX, Y: newY}})
 		}
 	}
-	return moves
+	return filterSelfCaptures(board, moves)
 }
 
 func getKingMoves(board *Board, x, y int) []Move  {
@@ -229,7 +242,7 @@ func getKingMoves(board *Board, x, y int) []Move  {
 			moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: newX, Y: newY}})
 		}
 	}
-	return moves
+	return filterSelfCaptures(board, moves)
 }
 
 func getMoves(board *Board, x, y int) []Move {
@@ -265,57 +278,104 @@ func applyMove(board *Board, move Move) {
 	board.Tiles[move.from.Y][move.from.X] = Tile{Piece: PieceEmpty}
 }
 
-/** Shitty minimax implementation, but it works for now. */
-func scoreMove(board *Board, move Move, depth int) int {
-	toTile := board.Tiles[move.to.Y][move.to.X]
-	scoreNow := 0
-	switch toTile.Piece {
+func pieceValue(piece Piece) int {
+	switch piece {
 	case PiecePawn:
-		scoreNow = 1
+		return 1
 	case PieceKnight, PieceBishop:
-		scoreNow = 3
+		return 3
 	case PieceRook:
-		scoreNow = 5
+		return 5
 	case PieceQueen:
-		scoreNow = 9
+		return 9
 	case PieceKing:
-		scoreNow = 1000
+		return 1000
 	default:
-		scoreNow = 0
+		return 0
 	}
-	if (depth > 0) {
-		// deep copy
-		board_copy := *board
-		applyMove(board, move)
-		nextMove, ok := getBestMove(board, oppositeColor(board.Tiles[move.from.Y][move.from.X].Color), depth-1)
-		*board = board_copy
-		if ok {
-		return scoreNow - scoreMove(board, nextMove, depth-1) 
-		}
-		return scoreNow
-	}
-	return scoreNow
 }
 
-func getBestMove(board *Board, Color Color, depth int) (Move, bool) {
-	bestMove := Move{}
-	bestScore := -1
+func getAllMoves(board *Board, color Color) []Move {
+	moves := []Move{}
 	for y := range BoardHeight {
 		for x := range BoardWidth {
 			tile := board.Tiles[y][x]
-			if tile.Piece != PieceEmpty && tile.Color == Color {
-				moves := getMoves(board, x, y)
-				for _, move := range moves {
-					score := scoreMove(board, move, depth)
-					if score > bestScore {
-						bestScore = score
-						bestMove = move
-					}
-				}
+			if tile.Piece != PieceEmpty && tile.Color == color {
+				moves = append(moves, getMoves(board, x, y)...)
 			}
 		}
 	}
-	return bestMove, bestScore >= 0
+	return moves
+}
+
+func makeMove(board *Board, move Move) (Tile, Tile) {
+	from := board.Tiles[move.from.Y][move.from.X]
+	to := board.Tiles[move.to.Y][move.to.X]
+	board.Tiles[move.to.Y][move.to.X] = from
+	board.Tiles[move.from.Y][move.from.X] = Tile{Piece: PieceEmpty}
+	return from, to
+}
+
+func undoMove(board *Board, move Move, from Tile, to Tile) {
+	board.Tiles[move.from.Y][move.from.X] = from
+	board.Tiles[move.to.Y][move.to.X] = to
+}
+
+func negamax(board *Board, color Color, depth int, alpha int, beta int) int {
+	if depth == 0 {
+		return 0
+	}
+	moves := getAllMoves(board, color)
+	if len(moves) == 0 {
+		return 0
+	}
+
+	best := -1000000
+	for _, move := range moves {
+		from, to := makeMove(board, move)
+		scoreNow := pieceValue(to.Piece)
+		score := scoreNow - negamax(board, oppositeColor(color), depth-1, -beta, -alpha)
+		undoMove(board, move, from, to)
+
+		if score > best {
+			best = score
+		}
+		if score > alpha {
+			alpha = score
+		}
+		if alpha >= beta {
+			break
+		}
+	}
+	return best
+}
+
+func getBestMove(board *Board, color Color, depth int) (Move, bool) {
+	moves := getAllMoves(board, color)
+	if len(moves) == 0 {
+		return Move{}, false
+	}
+
+	bestMove := moves[0]
+	bestScore := -1000000
+	alpha := -1000000
+	beta := 1000000
+
+	for _, move := range moves {
+		from, to := makeMove(board, move)
+		scoreNow := pieceValue(to.Piece)
+		score := scoreNow - negamax(board, oppositeColor(color), depth-1, -beta, -alpha)
+		undoMove(board, move, from, to)
+
+		if score > bestScore {
+			bestScore = score
+			bestMove = move
+		}
+		if score > alpha {
+			alpha = score
+		}
+	}
+	return bestMove, true
 }
 
 func makeTurn(board *Board) {
