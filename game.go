@@ -51,10 +51,8 @@ func NewBoard(width, height int, screenX, screenY int) Board {
 }
 
 type Player struct {
-	Name   string
-	Id     string
-	Health int
-	Cash   int
+	Id   string
+	Name string
 }
 
 type Tile struct {
