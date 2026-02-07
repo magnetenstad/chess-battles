@@ -20,10 +20,7 @@ func (g *Game) Update() error {
 		board := boards[i]
 		graphicsBoard := graphicsBoards[i]
 
-
 		makeTurn(board)
-
-		
 
 		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 			x, y := ebiten.CursorPosition()
@@ -33,6 +30,7 @@ func (g *Game) Update() error {
 			x, y := ebiten.CursorPosition()
 			handleRightClick(g, graphicsBoard, x, y)
 		}
+
 		events := g.Events
 		g.Events = nil
 		for _, event := range events {
@@ -56,7 +54,7 @@ func handleRightClick(game *Game, board *GraphicsBoard, x, y int) {
 	if !ok {
 		return
 	}
-	game.Events = append(game.Events, Event{kind: EventSpawn, SpawnEvent: SpawnEvent{Tile: Tile{Piece: PiecePawn, Color: White}, x: x, y: y}})
+	game.Events = append(game.Events, Event{kind: EventSpawn, SpawnEvent: SpawnEvent{Tile: Tile{Piece: game.Shop.PieceToPlace, Color: White}, x: x, y: y}})
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
