@@ -16,6 +16,18 @@ func (g *Game) Update() error {
 	boards := []*Board{&g.Logic.Board1, &g.Logic.Board2}
 	graphicsBoards := []*GraphicsBoard{&g.Graphics.Board1, &g.Graphics.Board2}
 
+	// Check if we need to spawn a piece (when either board's turn is at a multiple of 10)
+	if g.Logic.Board1.turn%10 == 0 && g.Logic.Board1.turn > 0 {
+		piece := randomPiece()
+		color := White
+		
+		// Spawn on both boards at potentially different positions
+		for i := range boards {
+			x, y, _ := findEmptyBackRowPosition(boards[i])
+			spawnPieceAtLocation(boards[i], x, y, piece, color)
+		}
+	}
+
 	for i := range boards {
 		board := boards[i]
 		graphicsBoard := graphicsBoards[i]
