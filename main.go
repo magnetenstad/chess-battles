@@ -42,7 +42,7 @@ type Player struct {
 
 type Cell struct {
 	X, Y     int
-	occupant Piece
+	Occupant Piece
 }
 
 type Piece int
