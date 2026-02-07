@@ -11,7 +11,14 @@ type Logic struct {
 
 type Board struct {
 	Tiles [BoardHeight][BoardWidth]Tile
-	turn  int
+	Turn  int
+}
+
+func (board *Board) Color() Color {
+	if board.Turn%2 == 0 {
+		return White
+	}
+	return Black
 }
 
 func setupPawnsVsRooks(board *Board) {
@@ -24,7 +31,6 @@ func setupPawnsVsRooks(board *Board) {
 			}
 		}
 	}
-
 
 	bottom := BoardHeight - 1
 
@@ -117,10 +123,9 @@ func applyMove(board *Board, move Move) {
 	if tile.Piece == PiecePawn && (move.to.Y == 0 || move.to.Y == BoardHeight-1) {
 		board.Tiles[move.to.Y][move.to.X].Piece = PieceQueen
 	}
-
+	board.Turn += 1
 }
 
-var turnEveryFrame = 5
 func spawnPieceAtLocation(board *Board, x, y int, piece Piece, color Color) {
 	if board.Tiles[y][x].Piece == PieceEmpty {
 		board.Tiles[y][x] = Tile{
@@ -151,18 +156,8 @@ func spawnRandomPieceOnBackRow(board *Board) {
 }
 
 func makeTurn(board *Board) {
-	
-	switch board.turn % (turnEveryFrame * 2) {
-case 0:
-		move, ok := getBestMove(board, White, 3)
-		if ok {
-			applyMove(board, move)
-		}
-	case turnEveryFrame:
-		move, ok := getBestMove(board, Black, 3)
-		if ok {
-			applyMove(board, move)
-		}
+	move, ok := getBestMove(board, 3)
+	if ok {
+		applyMove(board, move)
 	}
-	board.turn++
 }

@@ -14,9 +14,8 @@ func advanceFor(color Color, y int) int {
 	if color == White {
 		return y
 	}
-	return (BoardHeight - 1) - y 
+	return (BoardHeight - 1) - y
 }
-
 
 func scoreBoard(board *Board, color Color) int {
 	score := 0
@@ -67,7 +66,8 @@ func alphaBeta(board *Board, color Color, depth int, alpha, beta int) int {
 	return best
 }
 
-func getBestMove(board *Board, color Color, depth int) (Move, bool) {
+func getBestMove(board *Board, depth int) (Move, bool) {
+	color := board.Color()
 	moves := generateMovesForColor(board, color)
 	if len(moves) == 0 {
 		return Move{}, false
