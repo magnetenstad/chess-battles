@@ -121,6 +121,34 @@ func applyMove(board *Board, move Move) {
 }
 
 var turnEveryFrame = 5
+func spawnPieceAtLocation(board *Board, x, y int, piece Piece, color Color) {
+	if board.Tiles[y][x].Piece == PieceEmpty {
+		board.Tiles[y][x] = Tile{
+			Piece: piece,
+			Color: color,
+		}
+	}
+}
+
+func findEmptyBackRowPosition(board *Board) (int, int, bool) {
+	backRows := []int{0, 1, 2}
+
+	for {
+		randomRow := backRows[rand.Intn(len(backRows))]
+		randomX := rand.Intn(BoardWidth)
+
+		if board.Tiles[randomRow][randomX].Piece == PieceEmpty {
+			return randomX, randomRow, true
+		}
+	}
+}
+
+func spawnRandomPieceOnBackRow(board *Board) {
+	x, y, _ := findEmptyBackRowPosition(board)
+	piece := randomPiece()
+	color := White
+	spawnPieceAtLocation(board, x, y, piece, color)
+}
 
 func makeTurn(board *Board) {
 	
