@@ -1,12 +1,27 @@
 package main
 
-import "github.com/hajimehoshi/ebiten/v2"
+import (
+	"math"
+	"math/rand"
+
+	"github.com/hajimehoshi/ebiten/v2"
+)
 
 func (graphics *Graphics) DrawBoard(screen *ebiten.Image, graphicsBoard *GraphicsBoard, board *Board) {
+	
+	shakeOffsetX := 0.0
+	shakeOffsetY := 0.0
+	if board.shakeDuration > 0 {
+		shakeOffsetX = (rand.Float64() - 0.5) * 1
+		shakeOffsetY = (rand.Float64() - 0.5) * 1
+		board.shakeDuration -= 1
+	}
+
+
 	for y := range BoardHeight {
 		for x := range BoardWidth {
-			px := float64((x * TileSize) + graphicsBoard.ScreenX)
-			py := float64((y * TileSize) + graphicsBoard.ScreenY)
+			px := float64((x * TileSize) + graphicsBoard.ScreenX + int(math.Ceil(shakeOffsetX)))
+			py := float64((y * TileSize) + graphicsBoard.ScreenY + int(math.Ceil(shakeOffsetY)))
 
 			opTile := graphics.Position(px, py)
 			if (x+y)%2 == 0 {

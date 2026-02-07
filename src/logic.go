@@ -12,6 +12,7 @@ type Logic struct {
 type Board struct {
 	Tiles [BoardHeight][BoardWidth]Tile
 	turn  int
+	shakeDuration int
 }
 
 func setupPawnsVsRooks(board *Board) {
