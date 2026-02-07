@@ -18,6 +18,7 @@ func (g *Game) Update() error {
 
 	now := time.Now()
 	if now.Sub(g.PrevComputerTime).Seconds() >= (1 / ComputerFPS) {
+		g.PrevComputerTime = now
 
 		// Check if we need to spawn a piece (when either board's turn is at a multiple of 10)
 		if g.Logic.Board1.Turn%10 == 0 && g.Logic.Board1.Turn > 0 {
@@ -34,7 +35,6 @@ func (g *Game) Update() error {
 		for i := range boards {
 			board := boards[i]
 			makeTurn(board)
-			g.PrevComputerTime = now
 		}
 	}
 
