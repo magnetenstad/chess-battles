@@ -1,5 +1,15 @@
 package main
 
+var pieceScores = map[Piece]int{
+	PieceEmpty:  0,
+	PiecePawn:   1,
+	PieceKnight: 3,
+	PieceRook:   3,
+	PieceBishop: 5,
+	PieceKing:   900000,
+	PieceQueen:  10,
+}
+
 func scoreBoard(board *Board, color Color) int {
 	score := 0
 	for y := range BoardHeight {

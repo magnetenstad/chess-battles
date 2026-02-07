@@ -109,16 +109,6 @@ type Move struct {
 	to   Position
 }
 
-var pieceScores = map[Piece]int{
-	PieceEmpty:  0,
-	PiecePawn:   1,
-	PieceKnight: 3,
-	PieceRook:   3,
-	PieceBishop: 5,
-	PieceKing:   900000,
-	PieceQueen:  10,
-}
-
 func oppositeColor(color Color) Color {
 	if color == White {
 		return Black
