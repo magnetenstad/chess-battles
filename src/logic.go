@@ -324,10 +324,10 @@ func alphaBeta(board *Board, color Color, depth int, alpha, beta int) int {
 
 	best := -INF
 	for _, move := range moves {
-		nb := *board
-		applyMove(&nb, move)
+		newBoard := *board
+		applyMove(&newBoard, move)
 
-		score := -alphaBeta(&nb, oppositeColor(color), depth-1, -beta, -alpha)
+		score := -alphaBeta(&newBoard, oppositeColor(color), depth-1, -beta, -alpha)
 
 		if score > best {
 			best = score
