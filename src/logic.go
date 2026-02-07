@@ -300,10 +300,57 @@ func scoreBoard(board *Board, color Color) int {
 	return score
 }
 
+func generateMovesForColor(board *Board, color Color) []Move {
+	moves := make([]Move, 0, 64)
+	for y := 0; y < BoardHeight; y++ {
+			for x := 0; x < BoardWidth; x++ {
+					t := board.Tiles[y][x]
+					if t.Piece == PieceEmpty || t.Color != color {
+							continue
+					}
+					moves = append(moves, getMoves(board, x, y)...)
+			}
+	}
+	return moves
+}
+
+const INF = 1_000_000_000
+
+func alphaBeta(board *Board, color Color, depth int, alpha, beta int) int {
+    if depth == 0 {
+        return scoreBoard(board, color) // eval from 'color' perspective
+    }
+
+    moves := generateMovesForColor(board, color)
+    if len(moves) == 0 {
+        return scoreBoard(board, color)
+    }
+
+    best := -INF
+    for _, move := range moves {
+        nb := *board
+        applyMove(&nb, move)
+
+        score := -alphaBeta(&nb, oppositeColor(color), depth-1, -beta, -alpha)
+
+        if score > best {
+            best = score
+        }
+        if score > alpha {
+            alpha = score
+        }
+        if alpha >= beta {
+            break
+        }
+    }
+    return best
+}
+
+
 func getRandomMove(board *Board, color Color) (Move, bool) {
 	moves := []Move{}
-	for y := 0; y < BoardHeight; y++ {
-		for x := 0; x < BoardWidth; x++ {
+	for y := range BoardHeight {
+		for x := range BoardWidth {
 			if board.Tiles[y][x].Color == color {
 				moves = append(moves, getMoves(board, x, y)...)
 			}
@@ -316,40 +363,45 @@ func getRandomMove(board *Board, color Color) (Move, bool) {
 }
 
 func getBestMove(board *Board, color Color, depth int) (Move, bool) {
-	moves := []Move{}
-	for y := 0; y < BoardHeight; y++ {
-		for x := 0; x < BoardWidth; x++ {
-			if board.Tiles[y][x].Color == color {
-				moves = append(moves, getMoves(board, x, y)...)
+	moves := generateMovesForColor(board, color)
+	if len(moves) == 0 {
+			return Move{}, false
+	}
+
+	bestScore := -INF
+	bestMove := moves[0]
+
+	alpha := -INF
+	beta := INF
+
+	for _, mv := range moves {
+			nb := *board
+			applyMove(&nb, mv)
+
+			score := -alphaBeta(&nb, oppositeColor(color), depth-1, -beta, -alpha)
+
+			if score > bestScore {
+					bestScore = score
+					bestMove = mv
 			}
-		}
+			if score > alpha {
+					alpha = score
+			}
 	}
-	bestScore := -999999
-	var bestMove Move
-	for i := range moves {
-		move := moves[i]
-		newBoard := *board
-		applyMove(&newBoard, move)
-		newScore := scoreBoard(&newBoard, color)
-		if newScore > bestScore {
-			bestMove = move
-		}
-	}
-	if bestScore == -999999 {
-		return Move{}, false
-	}
+
 	return bestMove, true
 }
+
 
 func makeTurn(board *Board) {
 	board.turn++
 	if board.turn % 2 == 0 {
-		move, ok := getRandomMove(board, White)
+		move, ok := getBestMove(board, White, 3)
 		if ok {
 			applyMove(board, move)
 		}
 	} else {
-		move, ok := getRandomMove(board, Black)
+		move, ok := getBestMove(board, Black, 3)
 		if ok {
 			applyMove(board, move)
 		}
