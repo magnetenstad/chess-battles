@@ -114,17 +114,22 @@ func getPawnMoves(board *Board, x, y int, color Color) []Move {
 
 	newY := y + direction
 	if newY >= 0 && newY < BoardHeight && board.Tiles[newY][x].Piece == PieceEmpty {
-		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: x, Y: newY}})
+			moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: x, Y: newY}})
 	}
 	// Diagonals
 	for _, dx := range []int{-1, 1} {
 		newX := x + dx
-		if newX >= 0 && newX < BoardWidth && newY >= 0 && newY < BoardHeight && board.Tiles[newY][newX].Piece != PieceEmpty {
+		if newX < 0 || newX >= BoardWidth || newY < 0 || newY >= BoardHeight {
+			continue
+	}	
+	tile := board.Tiles[newY][newX]
+		if tile.Piece != PieceEmpty && tile.Color != color {
 			moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: newX, Y: newY}})
 		}
 	}
 	return filterSelfCaptures(board, moves)
 }
+
 
 func getKingMoves(board *Board, x, y int) []Move {
 	moves := []Move{}
