@@ -8,22 +8,30 @@ const (
 )
 
 type SpawnEvent struct {
-	Tile Tile
-	x, y int
+	Tile Tile `json:"tile"`
+	X    int  `json:"x"`
+	Y    int  `json:"y"`
 }
 
 type DeleteEvent struct {
-	x, y int
+	X int `json:"x"`
+	Y int `json:"y"`
 }
 
 type Event struct {
-	kind        EventKind
-	SpawnEvent  SpawnEvent
-	DeleteEvent DeleteEvent
+	Kind        EventKind   `json:"kind"`
+	SpawnEvent  SpawnEvent  `json:"spawn_event"`
+	DeleteEvent DeleteEvent `json:"delete_event"`
+}
+
+type GameEvent struct {
+	Board int   `json:"board"`
+	Event Event `json:"event"`
+	Local bool  `json:"-"`
 }
 
 func HandleEvent(board *Board, event Event) {
-	switch event.kind {
+	switch event.Kind {
 	case EventDelete:
 		HandleDelete(board, event.DeleteEvent)
 	case EventSpawn:
@@ -32,9 +40,9 @@ func HandleEvent(board *Board, event Event) {
 }
 
 func HandleDelete(board *Board, event DeleteEvent) {
-	board.Tiles[event.y][event.x].Piece = PieceEmpty
+	board.Tiles[event.Y][event.X].Piece = PieceEmpty
 }
 
 func HandleSpawn(board *Board, event SpawnEvent) {
-	board.Tiles[event.y][event.x] = event.Tile
+	board.Tiles[event.Y][event.X] = event.Tile
 }

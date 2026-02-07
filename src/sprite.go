@@ -1,8 +1,8 @@
 package main
 
 import (
+	"fmt"
 	"image"
-	"log"
 
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
@@ -52,12 +52,16 @@ var atlas = map[SpriteID]image.Rectangle{
 }
 
 var Sprites map[SpriteID]image.Image
+var spritesLoaded bool
 
-func init() {
+func LoadSprites() error {
+	if spritesLoaded {
+		return nil
+	}
 
 	imgAtlas, _, err := ebitenutil.NewImageFromFile(SpriteAtlasPath)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("load sprite atlas: %w", err)
 	}
 
 	Sprites = map[SpriteID]image.Image{
@@ -79,4 +83,7 @@ func init() {
 		SpriteKnightWhite: imgAtlas.SubImage(atlas[SpriteKnightWhite]),
 		SpritePawnWhite:   imgAtlas.SubImage(atlas[SpritePawnWhite]),
 	}
+
+	spritesLoaded = true
+	return nil
 }

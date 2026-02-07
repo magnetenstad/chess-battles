@@ -1,9 +1,10 @@
 package main
 
 type Game struct {
-	Logic    Logic
-	Graphics Graphics
-	Events   []Event
+	Logic       Logic
+	Graphics    Graphics
+	Events      []GameEvent
+	EventSocket *EventSocket
 }
 
 func NewGame() Game {
@@ -22,5 +23,20 @@ func NewGame() Game {
 				ScreenY: 50,
 			},
 		},
+	}
+}
+
+func (g *Game) SetEventSocket(socket *EventSocket) {
+	g.EventSocket = socket
+}
+
+func (g *Game) BoardForIndex(index int) (*Board, bool) {
+	switch index {
+	case 0:
+		return &g.Logic.Board1, true
+	case 1:
+		return &g.Logic.Board2, true
+	default:
+		return nil, false
 	}
 }

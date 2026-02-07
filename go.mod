@@ -2,7 +2,10 @@ module chess-battles
 
 go 1.25.7
 
-require github.com/hajimehoshi/ebiten/v2 v2.9.8
+require (
+	github.com/gorilla/websocket v1.5.3
+	github.com/hajimehoshi/ebiten/v2 v2.9.8
+)
 
 require (
 	github.com/ebitengine/gomobile v0.0.0-20250923094054-ea854a63cce1 // indirect
