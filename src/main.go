@@ -17,6 +17,11 @@ func (g *Game) Update() error {
 		board := boards[i]
 		graphicsBoard := graphicsBoards[i]
 
+
+		makeTurn(board)
+
+		
+
 		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
 			x, y := ebiten.CursorPosition()
 			handleLeftClick(g, graphicsBoard, x, y)
@@ -64,7 +69,7 @@ func main() {
 	ebiten.SetWindowSize(640, 480)
 	ebiten.SetWindowTitle("Hello, Chess Battles!")
 	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
-
+	ebiten.SetTPS(4)
 	game := NewGame()
 	if err := ebiten.RunGame(&game); err != nil {
 		log.Fatal(err)
