@@ -20,15 +20,15 @@ func (g *Game) Update() error {
 	if now.Sub(g.PrevComputerTime).Seconds() >= (1 / ComputerFPS) {
 		g.PrevComputerTime = now
 
-		// Check if we need to spawn a piece (when either board's turn is at a multiple of 10)
-		if board.Turn%10 == 0 && board.Turn > 0 {
-			piece := randomPiece()
-			color := White
+		// // Check if we need to spawn a piece (when either board's turn is at a multiple of 10)
+		// if board.Turn%10 == 0 && board.Turn > 0 {
+		// 	piece := randomPiece()
+		// 	color := White
 
-			// Spawn on both boards at potentially different positions
-			x, y, _ := findEmptyBackRowPosition(board)
-			spawnPieceAtLocation(board, x, y, piece, color)
-		}
+		// 	// Spawn on both boards at potentially different positions
+		// 	x, y, _ := findEmptyBackRowPosition(board)
+		// 	spawnPieceAtLocation(board, x, y, piece, color)
+		// }
 
 		makeTurn(&g.Logic.Board)
 

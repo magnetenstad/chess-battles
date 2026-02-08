@@ -156,7 +156,7 @@ func spawnRandomPieceOnBackRow(board *Board) {
 }
 
 func makeTurn(board *Board) {
-	move, ok := getBestMove(board, 3)
+	move, ok := getBestMove(board, 4)
 	if ok {
 		target := board.Tiles[move.to.Y][move.to.X]
 		if target.Piece != PieceEmpty {

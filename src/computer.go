@@ -1,24 +1,19 @@
 package main
 
-var pieceScores = map[Piece]int{
-	PieceEmpty:  0,
-	PiecePawn:   1,
-	PieceKnight: 3,
-	PieceRook:   3,
-	PieceBishop: 5,
-	PieceKing:   900000,
-	PieceQueen:  10,
+import "math"
+
+var pieceScores = map[Piece]float64{
+	PieceEmpty:  0.0,
+	PiecePawn:   1.0,
+	PieceKnight: 3.0,
+	PieceRook:   3.0,
+	PieceBishop: 5.0,
+	PieceKing:   900000.0,
+	PieceQueen:  10.0,
 }
 
-func advanceFor(color Color, y int) int {
-	if color == White {
-		return y
-	}
-	return (BoardHeight - 1) - y
-}
-
-func scoreBoard(board *Board, color Color) int {
-	score := 0
+func evaluate(board *Board, color Color) float64 {
+	score := 0.0
 	for y := range BoardHeight {
 		for x := range BoardWidth {
 			tile := board.Tiles[y][x]
@@ -26,74 +21,54 @@ func scoreBoard(board *Board, color Color) int {
 				continue
 			} else if tile.Color == color {
 				score += pieceScores[tile.Piece]
-				score += advanceFor(tile.Color, y)
 			} else {
 				score -= pieceScores[tile.Piece]
-				score -= advanceFor(tile.Color, y)
 			}
 		}
 	}
 	return score
 }
 
-const INF = 1_000_000_000
+func negamax(board *Board, depth int, alpha, beta float64) (Move, float64, bool) {
+	color := board.Color()
+	empty_move := Move{}
 
-func alphaBeta(board *Board, color Color, depth int, alpha, beta int) int {
 	if depth == 0 {
-		return scoreBoard(board, color)
+		return empty_move, evaluate(board, color), false
 	}
 
 	moves := generateMovesForColor(board, color)
 	if len(moves) == 0 {
-		return scoreBoard(board, color)
+		return empty_move, evaluate(board, color), false
 	}
 
-	best := -INF
+	best_value := math.Inf(-1)
+	best_move := empty_move
+
 	for _, move := range moves {
-		newBoard := *board
-		applyMove(&newBoard, move)
+		child := *board
+		applyMove(&child, move)
 
-		score := -alphaBeta(&newBoard, oppositeColor(color), depth-1, -beta, -alpha)
+		_, value, _ := negamax(&child, depth-1, -beta, -alpha)
+		value = -value
 
-		if score > best {
-			best = score
+		if value > best_value {
+			best_value = value
+			best_move = move
 		}
-		if score > alpha {
-			alpha = score
-		}
+
+		alpha := math.Max(alpha, best_value)
 		if alpha >= beta {
 			break
 		}
 	}
-	return best
+
+	return best_move, best_value, true
 }
 
 func getBestMove(board *Board, depth int) (Move, bool) {
-	color := board.Color()
-	moves := generateMovesForColor(board, color)
-	if len(moves) == 0 {
-		return Move{}, false
-	}
-
-	bestScore := -INF
-	bestMove := moves[0]
-
-	alpha := -INF
-	beta := INF
-
-	for _, move := range moves {
-		nb := *board
-		applyMove(&nb, move)
-
-		score := -alphaBeta(&nb, oppositeColor(color), depth-1, -beta, -alpha)
-
-		if score > bestScore {
-			bestScore = score
-			bestMove = move
-		}
-		if score > alpha {
-			alpha = score
-		}
-	}
-	return bestMove, true
+	alpha := math.Inf(-1)
+	beta := math.Inf(1)
+	move, _, ok := negamax(board, depth, alpha, beta)
+	return move, ok
 }
