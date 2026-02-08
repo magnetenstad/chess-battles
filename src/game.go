@@ -10,12 +10,15 @@ const (
 )
 
 type Game struct {
-	Board            Board
-	Graphics         Graphics
-	Shop             Shop
+	Board      Board
+	Graphics   Graphics
+	Shop       Shop
+	Deck       Deck
+	State      State
+	MatchIndex int
+
 	PrevComputerTime time.Time
-	State            State
-	MatchIndex       int
+	Debug            bool
 }
 
 func NewGame() Game {

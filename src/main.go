@@ -1,13 +1,20 @@
 package main
 
 import (
+	"fmt"
 	_ "image/png"
 	"log"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 func (g *Game) Update() error {
+	if inpututil.IsKeyJustPressed(ebiten.KeyF1) {
+		g.Debug = !g.Debug
+	}
+
 	switch g.State {
 	case StateArrange:
 		g.UpdateStateArrange()
@@ -23,6 +30,10 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	if g.State == StateArrange {
 		g.Graphics.DrawShop(screen, &g.Shop)
 		g.Graphics.DrawControl(screen)
+	}
+
+	if g.Debug {
+		ebitenutil.DebugPrint(screen, fmt.Sprintf("State: %d", g.State))
 	}
 }
 
