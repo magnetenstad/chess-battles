@@ -13,49 +13,40 @@ func (g *Game) Update() error {
 
 	g.UpdateShop()
 
-	boards := []*Board{&g.Logic.Board1, &g.Logic.Board2}
-	graphicsBoards := []*GraphicsBoard{&g.Graphics.Board1, &g.Graphics.Board2}
+	board := &g.Logic.Board
+	graphicsBoard := &g.Graphics.Board
 
 	now := time.Now()
 	if now.Sub(g.PrevComputerTime).Seconds() >= (1 / ComputerFPS) {
 		g.PrevComputerTime = now
 
 		// Check if we need to spawn a piece (when either board's turn is at a multiple of 10)
-		if g.Logic.Board1.Turn%10 == 0 && g.Logic.Board1.Turn > 0 {
+		if board.Turn%10 == 0 && board.Turn > 0 {
 			piece := randomPiece()
 			color := White
 
 			// Spawn on both boards at potentially different positions
-			for i := range boards {
-				x, y, _ := findEmptyBackRowPosition(boards[i])
-				spawnPieceAtLocation(boards[i], x, y, piece, color)
-			}
+			x, y, _ := findEmptyBackRowPosition(board)
+			spawnPieceAtLocation(board, x, y, piece, color)
 		}
 
-		for i := range boards {
-			board := boards[i]
-			makeTurn(board)
-		}
+		makeTurn(&g.Logic.Board)
+
 	}
 
-	for i := range boards {
-		board := boards[i]
-		graphicsBoard := graphicsBoards[i]
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+		x, y := ebiten.CursorPosition()
+		handleLeftClick(g, graphicsBoard, x, y)
+	}
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonRight) {
+		x, y := ebiten.CursorPosition()
+		handleRightClick(g, graphicsBoard, x, y)
+	}
 
-		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
-			x, y := ebiten.CursorPosition()
-			handleLeftClick(g, graphicsBoard, x, y)
-		}
-		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonRight) {
-			x, y := ebiten.CursorPosition()
-			handleRightClick(g, graphicsBoard, x, y)
-		}
-
-		events := g.Events
-		g.Events = nil
-		for _, event := range events {
-			HandleEvent(board, event)
-		}
+	events := g.Events
+	g.Events = nil
+	for _, event := range events {
+		HandleEvent(board, event)
 	}
 
 	return nil
@@ -79,8 +70,7 @@ func handleRightClick(game *Game, board *GraphicsBoard, x, y int) {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.Graphics.DrawBoard(screen, &g.Graphics.Board1, &g.Logic.Board1)
-	g.Graphics.DrawBoard(screen, &g.Graphics.Board2, &g.Logic.Board2)
+	g.Graphics.DrawBoard(screen, &g.Graphics.Board, &g.Logic.Board)
 	g.Graphics.DrawShop(screen, &g.Shop)
 }
 

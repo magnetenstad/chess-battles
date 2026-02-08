@@ -13,16 +13,11 @@ type Game struct {
 func NewGame() Game {
 	return Game{
 		Logic: Logic{
-			Board1: NewBoard(),
-			Board2: NewBoard(),
+			Board: NewBoard(),
 		},
 
 		Graphics: Graphics{
-			Board1: GraphicsBoard{
-				ScreenX: TileSize,
-				ScreenY: TileSize,
-			},
-			Board2: GraphicsBoard{
+			Board: GraphicsBoard{
 				ScreenX: TileSize + BoardWidth*TileSize + TileSize,
 				ScreenY: TileSize,
 			},

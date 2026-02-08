@@ -3,8 +3,7 @@ package main
 import "github.com/hajimehoshi/ebiten/v2"
 
 type Graphics struct {
-	Board1 GraphicsBoard
-	Board2 GraphicsBoard
+	Board GraphicsBoard
 }
 
 type GraphicsBoard struct {

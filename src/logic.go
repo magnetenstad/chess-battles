@@ -6,8 +6,7 @@ import (
 )
 
 type Logic struct {
-	Board1 Board
-	Board2 Board
+	Board Board
 }
 
 type Board struct {
