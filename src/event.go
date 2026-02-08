@@ -36,5 +36,8 @@ func HandleDelete(board *Board, event DeleteEvent) {
 }
 
 func HandleSpawn(board *Board, event SpawnEvent) {
+	if board.Tiles[event.y][event.x].Piece != PieceEmpty {
+		return
+	}
 	board.Tiles[event.y][event.x] = event.Tile
 }

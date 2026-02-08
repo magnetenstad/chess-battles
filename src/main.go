@@ -24,16 +24,15 @@ func (g *Game) Update() error {
 		g.PrevComputerTime = now
 
 		// Check if we need to spawn a piece (when either board's turn is at a multiple of 10)
-		/*if g.Logic.Board1.Turn%10 == 0 && g.Logic.Board1.Turn > 0 {
-			piece := randomPiece()
-			color := White
+		if g.Logic.Board.Turn%20 == 0 && g.Logic.Board.Turn > 0 {
+			piece := PiecePawn
+			color := Black
 
-			// Spawn on both boards at potentially different positions
-			for i := range boards {
-				x, y, _ := findEmptyBackRowPosition(boards[i])
-				spawnPieceAtLocation(boards[i], x, y, piece, color)
+			// Spawn on first row
+			for x := 1; x < BoardWidth-1; x++ {
+			g.Events = append(g.Events, Event{kind: EventSpawn, SpawnEvent: SpawnEvent{Tile: Tile{Piece: piece, Color: color}, x: x, y: 0}})
 			}
-		}*/
+		}
 
 		makeTurn(&g.Logic.Board)
 

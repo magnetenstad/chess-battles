@@ -57,7 +57,7 @@ func negamax(board *Board, depth int, alpha, beta float64) (Move, float64, bool)
 			best_move = move
 		}
 
-		alpha := math.Max(alpha, best_value)
+		alpha = math.Max(alpha, best_value)
 		if alpha >= beta {
 			break
 		}
