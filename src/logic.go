@@ -34,6 +34,7 @@ func setupPawns(board *Board) {
 	board.Tiles[0][5] = Tile{
 		Piece: PieceKing,
 		Color: Black,
+		King: true,
 	}
 }
 
@@ -54,6 +55,7 @@ func NewBoard() Board {
 type Tile struct {
 	Piece Piece
 	Color Color
+	King bool
 }
 
 type Color int
@@ -61,7 +63,6 @@ type Color int
 const (
 	White Color = iota
 	Black
-	Gold
 )
 
 func randomColor() Color {
@@ -161,7 +162,7 @@ func makeTurn(game *Game) {
 		if target.Piece != PieceEmpty {
 			fmt.Println("Piece of kind", target.Piece, "and color", target.Color, "was captured at position", move.to.X, move.to.Y)
 		}
-		if target.Piece == PieceKing {
+		if target.King {
 			game.Playing = false
 		}
 		applyMove(board, move)

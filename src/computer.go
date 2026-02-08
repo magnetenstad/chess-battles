@@ -12,7 +12,7 @@ var pieceScores = map[Piece]float64{
 	PieceRook:   3.0,
 	PieceBishop: 5.0,
 	PieceQueen:  10.0,
-	PieceKing:   9999,
+	PieceKing:   4,
 }
 
 func evaluate(board *Board, color Color) float64 {
@@ -24,8 +24,14 @@ func evaluate(board *Board, color Color) float64 {
 				continue
 			} else if tile.Color == color {
 				score += pieceScores[tile.Piece]
+				if tile.King {
+					score += 999
+				}
 			} else {
 				score -= pieceScores[tile.Piece]
+				if tile.King {
+					score -= 999
+				}
 			}
 		}
 	}
