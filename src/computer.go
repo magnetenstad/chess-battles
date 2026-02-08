@@ -14,28 +14,26 @@ var pieceScores = map[Piece]float64{
 	PieceBishop: 5,
 	PieceQueen:  10,
 }
+var kingScore = 1_000.0
 
 func evaluate(board *Board, color Color) float64 {
-	score := 0.0
+	total := 0.0
 	for y := range BoardHeight {
 		for x := range BoardWidth {
 			tile := board.Tiles[y][x]
-			if tile.Piece == PieceEmpty {
-				continue
-			} else if tile.Color == color {
-				score += pieceScores[tile.Piece]
-				if tile.King {
-					score += 999
-				}
+			value := pieceScores[tile.Piece]
+			if tile.King {
+				value = kingScore
+			}
+
+			if tile.Color == color {
+				total += value
 			} else {
-				score -= pieceScores[tile.Piece]
-				if tile.King {
-					score -= 999
-				}
+				total -= value
 			}
 		}
 	}
-	return score
+	return total
 }
 
 func negamax(board *Board, depth int, alpha, beta float64) (Move, float64, bool) {
