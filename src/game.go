@@ -28,6 +28,6 @@ func NewGame() Game {
 		},
 		State: StateArrange,
 	}
-	game.Board.ApplyMatch(game.MatchIndex)
+	game.StartMatch(game.MatchIndex)
 	return game
 }
