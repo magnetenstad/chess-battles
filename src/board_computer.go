@@ -2,6 +2,7 @@ package main
 
 import (
 	"math"
+	"math/rand"
 	"slices"
 )
 
@@ -56,7 +57,7 @@ func negamax(board *Board, depth int, alpha, beta float64) (Move, float64, bool)
 		if !board.isCaptureMove(m1) && board.isCaptureMove(m2) {
 			return 1
 		}
-		return 0
+		return rand.Intn(3) - 1
 	})
 	if len(moves) == 0 {
 		return empty_move, evaluate(board, color), false
