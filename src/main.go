@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	_ "image/png"
 	"log"
 	"time"
@@ -13,29 +12,15 @@ import (
 func (g *Game) Update() error {
 
 	g.UpdateShop()
+	g.UpdateControl()
 
 	board := &g.Logic.Board
 	graphicsBoard := &g.Graphics.Board
 
 	now := time.Now()
-	if now.Sub(g.StartTime).Seconds() < PreGameTimeSeconds {
-		fmt.Println("Pre-game phase. Time left:", PreGameTimeSeconds-now.Sub(g.StartTime).Seconds())
-	} else if now.Sub(g.PrevComputerTime).Seconds() >= (1 / ComputerFPS) {
+	if g.Playing && now.Sub(g.PrevComputerTime).Seconds() >= (1 / ComputerFPS) {
 		g.PrevComputerTime = now
-
-		// Check if we need to spawn a piece (when either board's turn is at a multiple of 10)
-		if g.Logic.Board.Turn%20 == 0 && g.Logic.Board.Turn > 0 {
-			piece := PiecePawn
-			color := Black
-
-			// Spawn on first row
-			for x := 1; x < BoardWidth-1; x++ {
-			g.Events = append(g.Events, Event{kind: EventSpawn, SpawnEvent: SpawnEvent{Tile: Tile{Piece: piece, Color: color}, x: x, y: 0}})
-			}
-		}
-
-		makeTurn(&g.Logic.Board)
-
+		makeTurn(g)
 	}
 
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
@@ -61,6 +46,9 @@ func handleLeftClick(game *Game, board *GraphicsBoard, x, y int) {
 	if !ok {
 		return
 	}
+	if game.Playing {
+		return
+	}
 	game.Events = append(game.Events, Event{kind: EventDelete, DeleteEvent: DeleteEvent{x: x, y: y}})
 	board.ShakeDuration = 5
 }
@@ -70,12 +58,19 @@ func handleRightClick(game *Game, board *GraphicsBoard, x, y int) {
 	if !ok {
 		return
 	}
+	if game.Playing {
+		return
+	}
 	game.Events = append(game.Events, Event{kind: EventSpawn, SpawnEvent: SpawnEvent{Tile: Tile{Piece: game.Shop.PieceToPlace, Color: White}, x: x, y: y}})
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
 	g.Graphics.DrawBoard(screen, &g.Graphics.Board, &g.Logic.Board)
-	g.Graphics.DrawShop(screen, &g.Shop)
+	if !g.Playing {
+		g.Graphics.DrawShop(screen, &g.Shop)
+		g.Graphics.DrawControl(screen)
+	}
+
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {

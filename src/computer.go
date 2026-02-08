@@ -1,6 +1,9 @@
 package main
 
-import "math"
+import (
+	"math"
+	"math/rand"
+)
 
 var pieceScores = map[Piece]float64{
 	PieceEmpty:  0.0,
@@ -9,7 +12,7 @@ var pieceScores = map[Piece]float64{
 	PieceRook:   3.0,
 	PieceBishop: 5.0,
 	PieceQueen:  10.0,
-	PieceKing:   math.Inf(1),
+	PieceKing:   9999,
 }
 
 func evaluate(board *Board, color Color) float64 {
@@ -38,6 +41,7 @@ func negamax(board *Board, depth int, alpha, beta float64) (Move, float64, bool)
 	}
 
 	moves := generateMovesForColor(board, color)
+	rand.Shuffle(len(moves), func(i, j int) { moves[i], moves[j] = moves[j], moves[i] })
 	if len(moves) == 0 {
 		return empty_move, evaluate(board, color), false
 	}

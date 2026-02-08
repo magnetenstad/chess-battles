@@ -31,6 +31,10 @@ func setupPawns(board *Board) {
 			}
 		}
 	}
+	board.Tiles[0][5] = Tile{
+		Piece: PieceKing,
+		Color: Black,
+	}
 }
 
 func NewBoard() Board {
@@ -148,12 +152,16 @@ func spawnRandomPieceOnBackRow(board *Board) {
 	spawnPieceAtLocation(board, x, y, piece, color)
 }
 
-func makeTurn(board *Board) {
-	move, ok := getBestMove(board, 4)
+func makeTurn(game *Game) {
+	board := &game.Logic.Board
+	move, ok := getBestMove(board, 6)
 	if ok {
 		target := board.Tiles[move.to.Y][move.to.X]
 		if target.Piece != PieceEmpty {
 			fmt.Println("Piece of kind", target.Piece, "and color", target.Color, "was captured at position", move.to.X, move.to.Y)
+		}
+		if target.Piece == PieceKing {
+			game.Playing = false
 		}
 		applyMove(board, move)
 	}

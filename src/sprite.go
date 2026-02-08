@@ -29,6 +29,8 @@ const (
 	SpriteBishopWhite SpriteID = "bishop_white"
 	SpriteKnightWhite SpriteID = "knight_white"
 	SpritePawnWhite   SpriteID = "pawn_white"
+
+	SpritePlayButton SpriteID = "play_button"
 )
 
 const t = TileSize
@@ -52,6 +54,8 @@ var atlas = map[SpriteID]image.Rectangle{
 	SpriteBishopWhite: image.Rect(t*4, t*14, t*5, t*15),
 	SpriteKnightWhite: image.Rect(t*5, t*14, t*6, t*15),
 	SpritePawnWhite:   image.Rect(t*6, t*14, t*7, t*15),
+
+	SpritePlayButton: image.Rect(t*17, t*10, t*20, t*11),
 }
 
 var Sprites map[SpriteID]*ebiten.Image
@@ -82,5 +86,7 @@ func init() {
 		SpriteBishopWhite: imgAtlas.SubImage(atlas[SpriteBishopWhite]).(*ebiten.Image),
 		SpriteKnightWhite: imgAtlas.SubImage(atlas[SpriteKnightWhite]).(*ebiten.Image),
 		SpritePawnWhite:   imgAtlas.SubImage(atlas[SpritePawnWhite]).(*ebiten.Image),
+		
+		SpritePlayButton: imgAtlas.SubImage(atlas[SpritePlayButton]).(*ebiten.Image),
 	}
 }
