@@ -5,8 +5,8 @@ import "math/rand"
 func filterSelfCaptures(board *Board, moves []Move) []Move {
 	filtered := []Move{}
 	for _, move := range moves {
-		toTile := board.Tiles[move.to.Y][move.to.X]
-		fromTile := board.Tiles[move.from.Y][move.from.X]
+		toTile := board.Tiles[move.To.Y][move.To.X]
+		fromTile := board.Tiles[move.From.Y][move.From.X]
 		if toTile.Piece == PieceEmpty || toTile.Color != fromTile.Color {
 			filtered = append(filtered, move)
 		}
@@ -19,28 +19,28 @@ func getRookMoves(board *Board, x, y int) []Move {
 	moves := []Move{}
 
 	for i := y - 1; i >= 0; i-- {
-		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: x, Y: i}})
+		moves = append(moves, Move{From: Position{X: x, Y: y}, To: Position{X: x, Y: i}})
 		if board.Tiles[i][x].Piece != PieceEmpty {
 			break
 		}
 	}
 
 	for i := y + 1; i < BoardHeight; i++ {
-		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: x, Y: i}})
+		moves = append(moves, Move{From: Position{X: x, Y: y}, To: Position{X: x, Y: i}})
 		if board.Tiles[i][x].Piece != PieceEmpty {
 			break
 		}
 	}
 
 	for j := x - 1; j >= 0; j-- {
-		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: y}})
+		moves = append(moves, Move{From: Position{X: x, Y: y}, To: Position{X: j, Y: y}})
 		if board.Tiles[y][j].Piece != PieceEmpty {
 			break
 		}
 	}
 
 	for j := x + 1; j < BoardWidth; j++ {
-		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: y}})
+		moves = append(moves, Move{From: Position{X: x, Y: y}, To: Position{X: j, Y: y}})
 		if board.Tiles[y][j].Piece != PieceEmpty {
 			break
 		}
@@ -52,28 +52,28 @@ func getBishopMoves(board *Board, x, y int) []Move {
 	moves := []Move{}
 
 	for i, j := y-1, x-1; i >= 0 && j >= 0; i, j = i-1, j-1 {
-		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: i}})
+		moves = append(moves, Move{From: Position{X: x, Y: y}, To: Position{X: j, Y: i}})
 		if board.Tiles[i][j].Piece != PieceEmpty {
 			break
 		}
 	}
 
 	for i, j := y-1, x+1; i >= 0 && j < BoardWidth; i, j = i-1, j+1 {
-		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: i}})
+		moves = append(moves, Move{From: Position{X: x, Y: y}, To: Position{X: j, Y: i}})
 		if board.Tiles[i][j].Piece != PieceEmpty {
 			break
 		}
 	}
 
 	for i, j := y+1, x-1; i < BoardHeight && j >= 0; i, j = i+1, j-1 {
-		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: i}})
+		moves = append(moves, Move{From: Position{X: x, Y: y}, To: Position{X: j, Y: i}})
 		if board.Tiles[i][j].Piece != PieceEmpty {
 			break
 		}
 	}
 
 	for i, j := y+1, x+1; i < BoardHeight && j < BoardWidth; i, j = i+1, j+1 {
-		moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: j, Y: i}})
+		moves = append(moves, Move{From: Position{X: x, Y: y}, To: Position{X: j, Y: i}})
 		if board.Tiles[i][j].Piece != PieceEmpty {
 			break
 		}
@@ -99,7 +99,7 @@ func getKnightMoves(board *Board, x, y int) []Move {
 		newX := x + dir.dx
 		newY := y + dir.dy
 		if newX >= 0 && newX < BoardWidth && newY >= 0 && newY < BoardHeight {
-			moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: newX, Y: newY}})
+			moves = append(moves, Move{From: Position{X: x, Y: y}, To: Position{X: newX, Y: newY}})
 		}
 	}
 	return filterSelfCaptures(board, moves)
@@ -114,22 +114,21 @@ func getPawnMoves(board *Board, x, y int, color Color) []Move {
 
 	newY := y + direction
 	if newY >= 0 && newY < BoardHeight && board.Tiles[newY][x].Piece == PieceEmpty {
-			moves = append(moves,	Move{from: Position{X: x, Y: y}, to: Position{X: x, Y: newY}})
+		moves = append(moves, Move{From: Position{X: x, Y: y}, To: Position{X: x, Y: newY}})
 	}
 	// Diagonals
 	for _, dx := range []int{-1, 1} {
 		newX := x + dx
 		if newX < 0 || newX >= BoardWidth || newY < 0 || newY >= BoardHeight {
 			continue
-	}	
-	tile := board.Tiles[newY][newX]
+		}
+		tile := board.Tiles[newY][newX]
 		if tile.Piece != PieceEmpty && tile.Color != color {
-			moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: newX, Y: newY}})
+			moves = append(moves, Move{From: Position{X: x, Y: y}, To: Position{X: newX, Y: newY}})
 		}
 	}
 	return filterSelfCaptures(board, moves)
 }
-
 
 func getKingMoves(board *Board, x, y int) []Move {
 	moves := []Move{}
@@ -149,7 +148,7 @@ func getKingMoves(board *Board, x, y int) []Move {
 		newX := x + dir.dx
 		newY := y + dir.dy
 		if newX >= 0 && newX < BoardWidth && newY >= 0 && newY < BoardHeight {
-			moves = append(moves, Move{from: Position{X: x, Y: y}, to: Position{X: newX, Y: newY}})
+			moves = append(moves, Move{From: Position{X: x, Y: y}, To: Position{X: newX, Y: newY}})
 		}
 	}
 	return filterSelfCaptures(board, moves)

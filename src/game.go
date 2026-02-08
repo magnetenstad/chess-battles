@@ -2,27 +2,30 @@ package main
 
 import "time"
 
+type State int
+
+const (
+	StateArrange State = iota
+	StatePlay
+)
+
 type Game struct {
-	Logic            Logic
+	Board            Board
 	Graphics         Graphics
-	Events           []Event
 	Shop             Shop
 	PrevComputerTime time.Time
-	Playing 				 bool
+	State            State
 }
 
 func NewGame() Game {
 	return Game{
-		Logic: Logic{
-			Board: NewBoard(),
-		},
-
+		Board: NewBoard(),
 		Graphics: Graphics{
 			Board: GraphicsBoard{
 				ScreenX: TileSize + BoardWidth*TileSize + TileSize,
 				ScreenY: TileSize,
 			},
 		},
-		Playing: false,
+		State: StateArrange,
 	}
 }

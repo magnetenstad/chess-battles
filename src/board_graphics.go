@@ -7,6 +7,11 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+type GraphicsBoard struct {
+	ScreenX, ScreenY int
+	ShakeDuration    int
+}
+
 func (graphics *Graphics) DrawBoard(screen *ebiten.Image, graphicsBoard *GraphicsBoard, board *Board) {
 
 	shakeOffsetX := 0.0
@@ -42,7 +47,22 @@ func (graphics *Graphics) DrawBoard(screen *ebiten.Image, graphicsBoard *Graphic
 
 			spriteID := TileToSprite[tile.Color][tile.Piece]
 			screen.DrawImage(Sprites[spriteID], &opPiece)
-			
+
 		}
 	}
+}
+
+func ScreenToTile(board *GraphicsBoard, x, y int) (int, int, bool) {
+	x -= board.ScreenX
+	y -= board.ScreenY
+	x = x / TileSize
+	y = y / TileSize
+
+	if x < 0 || x >= BoardWidth {
+		return -1, -1, false
+	}
+	if y < 0 || y >= BoardHeight {
+		return -1, -1, false
+	}
+	return x, y, true
 }

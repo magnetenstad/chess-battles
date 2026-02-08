@@ -55,7 +55,7 @@ func negamax(board *Board, depth int, alpha, beta float64) (Move, float64, bool)
 
 	for _, move := range moves {
 		child := *board
-		applyMove(&child, move)
+		ApplyMove(&child, move)
 
 		_, value, _ := negamax(&child, depth-1, -beta, -alpha)
 		value = -value
@@ -74,7 +74,7 @@ func negamax(board *Board, depth int, alpha, beta float64) (Move, float64, bool)
 	return best_move, best_value, true
 }
 
-func getBestMove(board *Board, depth int) (Move, bool) {
+func ComputeMove(board *Board, depth int) (Move, bool) {
 	alpha := math.Inf(-1)
 	beta := math.Inf(1)
 	move, _, ok := negamax(board, depth, alpha, beta)
