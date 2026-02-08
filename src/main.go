@@ -70,7 +70,7 @@ func handleRightClick(game *Game, board *GraphicsBoard, x, y int) {
 	if !ok {
 		return
 	}
-	game.Events = append(game.Events, Event{kind: EventSpawn, SpawnEvent: SpawnEvent{Tile: Tile{Piece: game.Shop.PieceToPlace, Color: Gold}, x: x, y: y}})
+	game.Events = append(game.Events, Event{kind: EventSpawn, SpawnEvent: SpawnEvent{Tile: Tile{Piece: game.Shop.PieceToPlace, Color: White}, x: x, y: y}})
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
