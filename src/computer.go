@@ -6,13 +6,13 @@ import (
 )
 
 var pieceScores = map[Piece]float64{
-	PieceEmpty:  0.0,
-	PiecePawn:   1.0,
-	PieceKnight: 3.0,
-	PieceRook:   3.0,
-	PieceBishop: 5.0,
-	PieceQueen:  10.0,
+	PieceEmpty:  0,
+	PiecePawn:   1,
+	PieceKnight: 3,
+	PieceRook:   3,
 	PieceKing:   4,
+	PieceBishop: 5,
+	PieceQueen:  10,
 }
 
 func evaluate(board *Board, color Color) float64 {

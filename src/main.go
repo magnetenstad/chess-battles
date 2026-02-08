@@ -18,18 +18,20 @@ func (g *Game) Update() error {
 	graphicsBoard := &g.Graphics.Board
 
 	now := time.Now()
-	if g.Playing && now.Sub(g.PrevComputerTime).Seconds() >= (1 / ComputerFPS) {
+	if g.Playing && now.Sub(g.PrevComputerTime).Seconds() >= (1/ComputerFPS) {
 		g.PrevComputerTime = now
 		makeTurn(g)
 	}
 
-	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
-		x, y := ebiten.CursorPosition()
-		handleLeftClick(g, graphicsBoard, x, y)
-	}
-	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonRight) {
-		x, y := ebiten.CursorPosition()
-		handleRightClick(g, graphicsBoard, x, y)
+	if !g.Playing {
+		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+			x, y := ebiten.CursorPosition()
+			handleLeftClick(g, graphicsBoard, x, y)
+		}
+		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonRight) {
+			x, y := ebiten.CursorPosition()
+			handleRightClick(g, graphicsBoard, x, y)
+		}
 	}
 
 	events := g.Events
@@ -46,11 +48,7 @@ func handleLeftClick(game *Game, board *GraphicsBoard, x, y int) {
 	if !ok {
 		return
 	}
-	if game.Playing {
-		return
-	}
-	game.Events = append(game.Events, Event{kind: EventDelete, DeleteEvent: DeleteEvent{x: x, y: y}})
-	board.ShakeDuration = 5
+	game.Events = append(game.Events, Event{kind: EventSpawn, SpawnEvent: SpawnEvent{Tile: Tile{Piece: game.Shop.PieceToPlace, Color: White}, x: x, y: y}})
 }
 
 func handleRightClick(game *Game, board *GraphicsBoard, x, y int) {
@@ -58,10 +56,8 @@ func handleRightClick(game *Game, board *GraphicsBoard, x, y int) {
 	if !ok {
 		return
 	}
-	if game.Playing {
-		return
-	}
-	game.Events = append(game.Events, Event{kind: EventSpawn, SpawnEvent: SpawnEvent{Tile: Tile{Piece: game.Shop.PieceToPlace, Color: White}, x: x, y: y}})
+	game.Events = append(game.Events, Event{kind: EventDelete, DeleteEvent: DeleteEvent{x: x, y: y}})
+	board.ShakeDuration = 5
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
