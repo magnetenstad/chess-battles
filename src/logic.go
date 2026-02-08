@@ -57,6 +57,7 @@ type Color int
 const (
 	White Color = iota
 	Black
+	Gold
 )
 
 func randomColor() Color {
