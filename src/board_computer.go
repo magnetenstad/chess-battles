@@ -2,7 +2,7 @@ package main
 
 import (
 	"math"
-	"math/rand"
+	"slices"
 )
 
 var pieceScores = map[Piece]float64{
@@ -36,6 +36,10 @@ func evaluate(board *Board, color Color) float64 {
 	return total
 }
 
+func (board* Board) isCaptureMove(move Move) bool {
+	return  board.Tiles[move.To.Y][move.To.X].Piece != PieceEmpty
+}
+
 func negamax(board *Board, depth int, alpha, beta float64) (Move, float64, bool) {
 	color := board.Color()
 	empty_move := Move{}
@@ -45,7 +49,15 @@ func negamax(board *Board, depth int, alpha, beta float64) (Move, float64, bool)
 	}
 
 	moves := generateMovesForColor(board, color)
-	rand.Shuffle(len(moves), func(i, j int) { moves[i], moves[j] = moves[j], moves[i] })
+	slices.SortFunc(moves, func(m1, m2 Move) int {
+		if board.isCaptureMove(m1) && !board.isCaptureMove(m2) {
+			return -1
+		}
+		if !board.isCaptureMove(m1) && board.isCaptureMove(m2) {
+			return 1
+		}
+		return 0
+	})
 	if len(moves) == 0 {
 		return empty_move, evaluate(board, color), false
 	}
