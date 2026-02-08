@@ -15,6 +15,9 @@ func (g *Game) Update() error {
 		g.Debug = !g.Debug
 	}
 	if g.Debug {
+		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+			g.State = StateArrange
+		}
 		if inpututil.IsKeyJustPressed(ebiten.KeyArrowRight) {
 			g.MatchIndex = g.MatchIndex + 1
 			g.StartMatch(g.MatchIndex)
