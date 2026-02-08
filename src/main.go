@@ -14,8 +14,8 @@ func (g *Game) Update() error {
 
 	g.UpdateShop()
 
-	boards := []*Board{&g.Logic.Board1, &g.Logic.Board2}
-	graphicsBoards := []*GraphicsBoard{&g.Graphics.Board1, &g.Graphics.Board2}
+	board := &g.Logic.Board
+	graphicsBoard := &g.Graphics.Board
 
 	now := time.Now()
 	if now.Sub(g.StartTime).Seconds() < PreGameTimeSeconds {
@@ -35,30 +35,23 @@ func (g *Game) Update() error {
 			}
 		}*/
 
-		for i := range boards {
-			board := boards[i]
-			makeTurn(board)
-		}
+		makeTurn(&g.Logic.Board)
+
 	}
 
-	for i := range boards {
-		board := boards[i]
-		graphicsBoard := graphicsBoards[i]
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
+		x, y := ebiten.CursorPosition()
+		handleLeftClick(g, graphicsBoard, x, y)
+	}
+	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonRight) {
+		x, y := ebiten.CursorPosition()
+		handleRightClick(g, graphicsBoard, x, y)
+	}
 
-		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
-			x, y := ebiten.CursorPosition()
-			handleLeftClick(g, graphicsBoard, x, y)
-		}
-		if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonRight) {
-			x, y := ebiten.CursorPosition()
-			handleRightClick(g, graphicsBoard, x, y)
-		}
-
-		events := g.Events
-		g.Events = nil
-		for _, event := range events {
-			HandleEvent(board, event)
-		}
+	events := g.Events
+	g.Events = nil
+	for _, event := range events {
+		HandleEvent(board, event)
 	}
 
 	return nil
@@ -70,6 +63,7 @@ func handleLeftClick(game *Game, board *GraphicsBoard, x, y int) {
 		return
 	}
 	game.Events = append(game.Events, Event{kind: EventDelete, DeleteEvent: DeleteEvent{x: x, y: y}})
+	board.ShakeDuration = 5
 }
 
 func handleRightClick(game *Game, board *GraphicsBoard, x, y int) {
@@ -81,8 +75,7 @@ func handleRightClick(game *Game, board *GraphicsBoard, x, y int) {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.Graphics.DrawBoard(screen, &g.Graphics.Board1, &g.Logic.Board1)
-	g.Graphics.DrawBoard(screen, &g.Graphics.Board2, &g.Logic.Board2)
+	g.Graphics.DrawBoard(screen, &g.Graphics.Board, &g.Logic.Board)
 	g.Graphics.DrawShop(screen, &g.Shop)
 }
 

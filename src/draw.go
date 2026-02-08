@@ -8,15 +8,14 @@ import (
 )
 
 func (graphics *Graphics) DrawBoard(screen *ebiten.Image, graphicsBoard *GraphicsBoard, board *Board) {
-	
+
 	shakeOffsetX := 0.0
 	shakeOffsetY := 0.0
-	if board.shakeDuration > 0 {
+	if graphicsBoard.ShakeDuration > 0 {
 		shakeOffsetX = (rand.Float64() - 0.5) * 1
 		shakeOffsetY = (rand.Float64() - 0.5) * 1
-		board.shakeDuration -= 1
+		graphicsBoard.ShakeDuration -= 1
 	}
-
 
 	for y := range BoardHeight {
 		for x := range BoardWidth {

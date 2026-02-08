@@ -6,14 +6,12 @@ import (
 )
 
 type Logic struct {
-	Board1 Board
-	Board2 Board
+	Board Board
 }
 
 type Board struct {
-	Tiles         [BoardHeight][BoardWidth]Tile
-	Turn          int
-	shakeDuration int
+	Tiles [BoardHeight][BoardWidth]Tile
+	Turn  int
 }
 
 func (board *Board) Color() Color {
