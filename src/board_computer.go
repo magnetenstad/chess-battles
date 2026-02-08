@@ -19,6 +19,9 @@ var kingScore = 1_000.0
 
 func evaluate(board *Board, color Color) float64 {
 	total := 0.0
+	moves := generateMovesForColor(board, color)
+	// add score for number of moves available
+	total += float64(len(moves)) * 0.001
 	for y := range BoardHeight {
 		for x := range BoardWidth {
 			tile := board.Tiles[y][x]
