@@ -14,6 +14,16 @@ func (g *Game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyF1) {
 		g.Debug = !g.Debug
 	}
+
+	if inpututil.IsKeyJustPressed(ebiten.KeyS) {
+		switch g.State {
+			case StateShop:
+				g.State = StateArrange
+			case StateArrange:
+				g.State = StateShop
+			}
+		
+	}
 	if g.Debug {
 		if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
 			g.State = StateArrange
@@ -38,7 +48,12 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.DrawBoard(screen)
+	if g.State == StateShop {
+		g.DrawShop(screen)
+	} else {
+		g.DrawBoard(screen)
+	}
+
 
 	if g.State == StateArrange {
 		g.DrawHand(screen)

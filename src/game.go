@@ -7,10 +7,12 @@ type State int
 const (
 	StateArrange State = iota
 	StatePlay
+	StateShop
 )
 
 type Game struct {
 	Board      Board
+	Shop	   Shop
 	Graphics   Graphics
 	Deck       Deck
 	Hand       Hand
@@ -33,6 +35,9 @@ func NewGame() Game {
 		Deck:  Deck{DrawCount: 3},
 	}
 	game.Deck.Cards = append(game.Deck.Cards, Card{Piece: PiecePawn})
+
+	game.Shop.items = append(game.Shop.items, Card{Piece: PieceKnight})
+
 	game.AddCardsFromDeckToHand()
 	game.StartMatch(game.MatchIndex)
 	return game
