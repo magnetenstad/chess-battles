@@ -3,6 +3,7 @@ package main
 var TileToSprite = map[Color]map[Piece]SpriteID{
 	White: PieceToWhiteSprite,
 	Black: PieceToBlackSprite,
+	Gold:  PieceToBlackSprite,
 }
 
 var PieceToWhiteSprite = map[Piece]SpriteID{

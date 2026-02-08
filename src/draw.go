@@ -35,8 +35,14 @@ func (graphics *Graphics) DrawBoard(screen *ebiten.Image, graphicsBoard *Graphic
 			}
 
 			opPiece := graphics.Position(px, py)
+
+			if tile.Color == Gold {
+				opPiece.ColorScale.Scale(2.5, 1.6, 1, 1)
+			}
+
 			spriteID := TileToSprite[tile.Color][tile.Piece]
 			screen.DrawImage(Sprites[spriteID], &opPiece)
+			
 		}
 	}
 }
