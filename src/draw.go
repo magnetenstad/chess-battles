@@ -37,7 +37,7 @@ func (graphics *Graphics) DrawBoard(screen *ebiten.Image, graphicsBoard *Graphic
 			opPiece := graphics.Position(px, py)
 
 			if tile.King {
-				opPiece.ColorScale.Scale(2.5, 1.6, 1, 1)
+				opPiece.ColorScale.Scale(1.25, 1.25, 0.5, 1)
 			}
 
 			spriteID := TileToSprite[tile.Color][tile.Piece]
