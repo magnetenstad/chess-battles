@@ -2,6 +2,7 @@ package main
 
 import (
 	"math"
+	"strconv"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -29,7 +30,7 @@ func (game *Game) UpdateShop() {
 }
 
 func (graphics *Graphics) DrawShop(screen *ebiten.Image, shop *Shop) {
-	for piece, _ := range PiecePrices {
+	for piece, price := range PiecePrices {
 		x, y := GetPositionForPiece(piece)
 		opt := graphics.Position(x, y)
 
@@ -40,6 +41,7 @@ func (graphics *Graphics) DrawShop(screen *ebiten.Image, shop *Shop) {
 			screen.DrawImage(Sprites[SpriteHover], &opt)
 		}
 
+		graphics.DrawText(screen, strconv.Itoa(price), x-TileSize/2, y+TileSize/2)
 	}
 }
 
