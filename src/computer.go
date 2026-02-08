@@ -1,20 +1,25 @@
 package main
 
+import (
+	"fmt"
+	"math/rand"
+)
+
 var pieceScores = map[Piece]int{
 	PieceEmpty:  0,
 	PiecePawn:   1,
 	PieceKnight: 3,
-	PieceRook:   3,
-	PieceBishop: 5,
+	PieceBishop: 3,
+	PieceRook:   5,
 	PieceKing:   900000,
 	PieceQueen:  10,
 }
 
 func advanceFor(color Color, y int) int {
 	if color == White {
-		return y
+		return  (BoardHeight - 1) - y
 	}
-	return (BoardHeight - 1) - y
+	return y
 }
 
 func scoreBoard(board *Board, color Color) int {
@@ -26,10 +31,10 @@ func scoreBoard(board *Board, color Color) int {
 				continue
 			} else if tile.Color == color {
 				score += pieceScores[tile.Piece]
-				score += advanceFor(tile.Color, y)
+				//score += advanceFor(tile.Color, y)
 			} else {
 				score -= pieceScores[tile.Piece]
-				score -= advanceFor(tile.Color, y)
+				//score -= advanceFor(tile.Color, y)
 			}
 		}
 	}
@@ -76,24 +81,26 @@ func getBestMove(board *Board, depth int) (Move, bool) {
 	}
 
 	bestScore := -INF
-	bestMove := moves[0]
 
 	alpha := -INF
 	beta := INF
-
+	bestMoves := []Move{}
 	for _, move := range moves {
 		nb := *board
 		applyMove(&nb, move)
 
 		score := -alphaBeta(&nb, oppositeColor(color), depth-1, -beta, -alpha)
-
+		
 		if score > bestScore {
+			bestMoves = []Move{move}
 			bestScore = score
-			bestMove = move
+		} else if score == bestScore {
+			bestMoves = append(bestMoves, move)
 		}
 		if score > alpha {
 			alpha = score
 		}
 	}
-	return bestMove, true
+	fmt.Println("Best score for color", color, "is", bestScore, "with", len(bestMoves), "best moves")
+	return bestMoves[rand.Intn(len(bestMoves))], true
 }

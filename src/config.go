@@ -6,4 +6,5 @@ const BoardWidth = 8
 const BoardHeight = 8
 
 const SpriteAtlasPath = "../assets/roupiks/atlas.png"
-const ComputerFPS = 1
+const ComputerFPS = 1.25
+const PreGameTimeSeconds = 15
