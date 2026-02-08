@@ -24,7 +24,7 @@ func (board *Board) Color() Color {
 func setupPawns(board *Board) {
 
 	board.Tiles[0][5] = Tile{
-		Piece: PieceKnight,
+		Piece: PieceRook,
 		Color: Black,
 		King: true,
 	}
