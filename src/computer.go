@@ -8,8 +8,8 @@ var pieceScores = map[Piece]float64{
 	PieceKnight: 3.0,
 	PieceRook:   3.0,
 	PieceBishop: 5.0,
-	PieceKing:   900000.0,
 	PieceQueen:  10.0,
+	PieceKing:   math.Inf(1),
 }
 
 func evaluate(board *Board, color Color) float64 {
