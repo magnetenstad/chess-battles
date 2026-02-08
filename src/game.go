@@ -25,7 +25,7 @@ func NewGame() Game {
 	game := Game{
 		Graphics: Graphics{
 			Board: GraphicsBoard{
-				ScreenX: TileSize + BoardWidth*TileSize + TileSize,
+				ScreenX: LayoutWidth/2 - TileSize*BoardWidth/2,
 				ScreenY: TileSize,
 			},
 		},
