@@ -16,25 +16,6 @@ func (board *Board) Color() Color {
 	return Black
 }
 
-func NewBoard() Board {
-	tiles := [BoardHeight][BoardWidth]Tile{}
-	for i := range tiles {
-		tiles[i] = [BoardWidth]Tile{}
-	}
-
-	board := Board{}
-
-	// TODO: Temporary!
-	board.Tiles[0][5] = Tile{
-		Piece: PieceRook,
-		Color: Black,
-		King:  true,
-	}
-
-	return board
-
-}
-
 type Tile struct {
 	Piece Piece
 	Color Color

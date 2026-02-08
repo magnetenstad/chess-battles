@@ -17,7 +17,13 @@ func (g *Game) UpdateStatePlay() {
 		ApplyMove(board, move)
 
 		if target.King {
-			g.State = StateArrange
+			g.EndStatePlay()
 		}
 	}
+}
+
+func (g *Game) EndStatePlay() {
+	g.State = StateArrange
+	g.MatchIndex += 1
+	g.Board.ApplyMatch(g.MatchIndex)
 }

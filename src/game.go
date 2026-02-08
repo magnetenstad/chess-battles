@@ -15,11 +15,11 @@ type Game struct {
 	Shop             Shop
 	PrevComputerTime time.Time
 	State            State
+	MatchIndex       int
 }
 
 func NewGame() Game {
-	return Game{
-		Board: NewBoard(),
+	game := Game{
 		Graphics: Graphics{
 			Board: GraphicsBoard{
 				ScreenX: TileSize + BoardWidth*TileSize + TileSize,
@@ -28,4 +28,6 @@ func NewGame() Game {
 		},
 		State: StateArrange,
 	}
+	game.Board.ApplyMatch(game.MatchIndex)
+	return game
 }
