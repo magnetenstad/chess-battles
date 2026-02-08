@@ -6,6 +6,6 @@ const BoardWidth = 8
 const BoardHeight = 8
 
 const SpriteAtlasPath = "../assets/roupiks/atlas.png"
-const ComputerFPS = 5.0
+const ComputerFPS = 2.0
 
 const TurnsPerLevel = 10

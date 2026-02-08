@@ -23,16 +23,8 @@ func (board *Board) Color() Color {
 
 func setupPawns(board *Board) {
 
-	for y := range 2 {
-		for x := range BoardWidth {
-			board.Tiles[y][x] = Tile{
-				Piece: PiecePawn,
-				Color: Black,
-			}
-		}
-	}
 	board.Tiles[0][5] = Tile{
-		Piece: PieceKing,
+		Piece: PieceKnight,
 		Color: Black,
 		King: true,
 	}
@@ -158,7 +150,10 @@ func makeTurn(game *Game) {
 	board := &game.Logic.Board
 	move, ok := getBestMove(board, 6)
 	if ok {
+		
+		source := board.Tiles[move.from.Y][move.from.X]
 		target := board.Tiles[move.to.Y][move.to.X]
+		fmt.Println("Computer moves piece ", source.Piece, " from", move.from.X, move.from.Y, "to", move.to.X, move.to.Y)
 		if target.Piece != PieceEmpty {
 			fmt.Println("Piece of kind", target.Piece, "and color", target.Color, "was captured at position", move.to.X, move.to.Y)
 		}
@@ -166,5 +161,7 @@ func makeTurn(game *Game) {
 			game.Playing = false
 		}
 		applyMove(board, move)
+	} else {
+		fmt.Println("No valid moves for computer")
 	}
 }
