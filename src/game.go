@@ -12,8 +12,8 @@ const (
 type Game struct {
 	Board      Board
 	Graphics   Graphics
-	Shop       Shop
 	Deck       Deck
+	Hand       Hand
 	State      State
 	MatchIndex int
 
@@ -30,7 +30,10 @@ func NewGame() Game {
 			},
 		},
 		State: StateArrange,
+		Deck:  Deck{DrawCount: 3},
 	}
+	game.Deck.Cards = append(game.Deck.Cards, Card{Piece: PiecePawn})
+	game.AddCardsFromDeckToHand()
 	game.StartMatch(game.MatchIndex)
 	return game
 }

@@ -4,10 +4,7 @@ type Card struct {
 	Piece Piece
 }
 
-type Hand struct {
-	Cards []Card
-}
-
 type Deck struct {
-	Cards []Card
+	Cards     []Card
+	DrawCount int // how many cards the player draws at the start of the turn
 }

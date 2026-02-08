@@ -38,11 +38,11 @@ func (g *Game) Update() error {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.Graphics.DrawBoard(screen, &g.Graphics.Board, &g.Board)
+	g.DrawBoard(screen)
 
 	if g.State == StateArrange {
-		g.Graphics.DrawShop(screen, &g.Shop)
-		g.Graphics.DrawControl(screen)
+		g.DrawHand(screen)
+		g.DrawControl(screen)
 	}
 
 	if g.Debug {

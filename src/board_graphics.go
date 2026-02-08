@@ -12,7 +12,9 @@ type GraphicsBoard struct {
 	ShakeDuration    int
 }
 
-func (graphics *Graphics) DrawBoard(screen *ebiten.Image, graphicsBoard *GraphicsBoard, board *Board) {
+func (g *Game) DrawBoard(screen *ebiten.Image) {
+	graphicsBoard := g.Graphics.Board
+	board := g.Board
 
 	shakeOffsetX := 0.0
 	shakeOffsetY := 0.0
@@ -27,7 +29,7 @@ func (graphics *Graphics) DrawBoard(screen *ebiten.Image, graphicsBoard *Graphic
 			px := float64((x * TileSize) + graphicsBoard.ScreenX + int(math.Ceil(shakeOffsetX)))
 			py := float64((y * TileSize) + graphicsBoard.ScreenY + int(math.Ceil(shakeOffsetY)))
 
-			opTile := graphics.Position(px, py)
+			opTile := g.Graphics.Position(px, py)
 			if (x+y)%2 == 0 {
 				screen.DrawImage(Sprites[SpriteTileBlack], &opTile)
 			} else {
@@ -39,7 +41,7 @@ func (graphics *Graphics) DrawBoard(screen *ebiten.Image, graphicsBoard *Graphic
 				continue
 			}
 
-			opPiece := graphics.Position(px, py)
+			opPiece := g.Graphics.Position(px, py)
 
 			if tile.King {
 				opPiece.ColorScale.Scale(1.25, 1.25, 0.5, 1)

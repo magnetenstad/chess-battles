@@ -1,6 +1,8 @@
 package main
 
-import "time"
+import (
+	"time"
+)
 
 func (g *Game) UpdateStatePlay() {
 	now := time.Now()
@@ -24,6 +26,7 @@ func (g *Game) UpdateStatePlay() {
 
 func (g *Game) EndStatePlay() {
 	g.State = StateArrange
+	g.AddCardsFromDeckToHand()
 	g.MatchIndex += 1
 	g.StartMatch(g.MatchIndex)
 }

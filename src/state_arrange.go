@@ -1,12 +1,14 @@
 package main
 
 import (
+	"slices"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 func (g *Game) UpdateStateArrange() {
-	g.UpdateShop()
+	g.UpdateHand()
 	g.UpdateControl()
 
 	graphicsBoard := &g.Graphics.Board
@@ -25,7 +27,12 @@ func handleLeftClick(game *Game, board *GraphicsBoard, x, y int) {
 	if !ok {
 		return
 	}
-	game.Board.Tiles[y][x].Piece = game.Shop.PieceToPlace
+
+	card := game.Hand.Cards[game.Hand.SelectIndex]
+	game.Board.Tiles[y][x] = Tile{Piece: card.Piece, Color: White}
+
+	game.Hand.SelectIndex = 0
+	game.Hand.Cards = slices.Delete(game.Hand.Cards, game.Hand.SelectIndex, game.Hand.SelectIndex+1)
 }
 
 func handleRightClick(game *Game, board *GraphicsBoard, x, y int) {
