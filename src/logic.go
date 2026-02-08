@@ -21,22 +21,15 @@ func (board *Board) Color() Color {
 	return Black
 }
 
-func setupPawnsVsRooks(board *Board) {
+func setupPawns(board *Board) {
 
-	for y := range 1 {
+	for y := range 2 {
 		for x := range BoardWidth {
 			board.Tiles[y][x] = Tile{
 				Piece: PiecePawn,
-				Color: White,
+				Color: Black,
 			}
 		}
-	}
-
-	bottom := BoardHeight - 1
-
-	board.Tiles[bottom][0] = Tile{
-		Piece: PieceQueen,
-		Color: Black,
 	}
 }
 
@@ -48,7 +41,7 @@ func NewBoard() Board {
 
 	board := Board{}
 
-	setupPawnsVsRooks(&board)
+	setupPawns(&board)
 
 	return board
 

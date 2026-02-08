@@ -107,9 +107,9 @@ func getKnightMoves(board *Board, x, y int) []Move {
 
 func getPawnMoves(board *Board, x, y int, color Color) []Move {
 	moves := []Move{}
-	direction := 1
+	direction := -1
 	if color == Black {
-		direction = -1
+		direction = 1
 	}
 
 	newY := y + direction

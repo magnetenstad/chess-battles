@@ -8,6 +8,7 @@ type Game struct {
 	Events           []Event
 	Shop             Shop
 	PrevComputerTime time.Time
+	StartTime time.Time
 }
 
 func NewGame() Game {
@@ -22,5 +23,6 @@ func NewGame() Game {
 				ScreenY: TileSize,
 			},
 		},
+		StartTime: time.Now(),
 	}
 }

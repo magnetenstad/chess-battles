@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	_ "image/png"
 	"log"
 	"time"
@@ -17,18 +18,22 @@ func (g *Game) Update() error {
 	graphicsBoard := &g.Graphics.Board
 
 	now := time.Now()
-	if now.Sub(g.PrevComputerTime).Seconds() >= (1 / ComputerFPS) {
+	if now.Sub(g.StartTime).Seconds() < PreGameTimeSeconds {
+		fmt.Println("Pre-game phase. Time left:", PreGameTimeSeconds-now.Sub(g.StartTime).Seconds())
+	} else if now.Sub(g.PrevComputerTime).Seconds() >= (1 / ComputerFPS) {
 		g.PrevComputerTime = now
 
-		// // Check if we need to spawn a piece (when either board's turn is at a multiple of 10)
-		// if board.Turn%10 == 0 && board.Turn > 0 {
-		// 	piece := randomPiece()
-		// 	color := White
+		// Check if we need to spawn a piece (when either board's turn is at a multiple of 10)
+		/*if g.Logic.Board1.Turn%10 == 0 && g.Logic.Board1.Turn > 0 {
+			piece := randomPiece()
+			color := White
 
-		// 	// Spawn on both boards at potentially different positions
-		// 	x, y, _ := findEmptyBackRowPosition(board)
-		// 	spawnPieceAtLocation(board, x, y, piece, color)
-		// }
+			// Spawn on both boards at potentially different positions
+			for i := range boards {
+				x, y, _ := findEmptyBackRowPosition(boards[i])
+				spawnPieceAtLocation(boards[i], x, y, piece, color)
+			}
+		}*/
 
 		makeTurn(&g.Logic.Board)
 
