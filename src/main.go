@@ -67,6 +67,7 @@ func handleLeftClick(game *Game, board *GraphicsBoard, x, y int) {
 		return
 	}
 	game.Events = append(game.Events, Event{kind: EventDelete, DeleteEvent: DeleteEvent{x: x, y: y}})
+	board.ShakeDuration = 5
 }
 
 func handleRightClick(game *Game, board *GraphicsBoard, x, y int) {

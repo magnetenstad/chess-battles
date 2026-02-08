@@ -9,6 +9,7 @@ type Graphics struct {
 
 type GraphicsBoard struct {
 	ScreenX, ScreenY int
+	ShakeDuration    int
 }
 
 func (graphics *Graphics) GetDrawImageOptions() ebiten.DrawImageOptions {
