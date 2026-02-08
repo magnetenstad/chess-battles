@@ -14,6 +14,16 @@ func (g *Game) Update() error {
 	if inpututil.IsKeyJustPressed(ebiten.KeyF1) {
 		g.Debug = !g.Debug
 	}
+	if g.Debug {
+		if inpututil.IsKeyJustPressed(ebiten.KeyArrowRight) {
+			g.MatchIndex = g.MatchIndex + 1
+			g.StartMatch(g.MatchIndex)
+		}
+		if inpututil.IsKeyJustPressed(ebiten.KeyArrowLeft) {
+			g.MatchIndex = g.MatchIndex - 1
+			g.StartMatch(g.MatchIndex)
+		}
+	}
 
 	switch g.State {
 	case StateArrange:
@@ -33,7 +43,7 @@ func (g *Game) Draw(screen *ebiten.Image) {
 	}
 
 	if g.Debug {
-		ebitenutil.DebugPrint(screen, fmt.Sprintf("State: %d", g.State))
+		ebitenutil.DebugPrint(screen, fmt.Sprintf("State: %d, Match: %d", g.State, g.MatchIndex))
 	}
 }
 
