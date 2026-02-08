@@ -25,5 +25,5 @@ func (g *Game) UpdateStatePlay() {
 func (g *Game) EndStatePlay() {
 	g.State = StateArrange
 	g.MatchIndex += 1
-	g.Board.ApplyMatch(g.MatchIndex)
+	g.StartMatch(g.MatchIndex)
 }

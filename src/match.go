@@ -1,15 +1,15 @@
 package main
 
-func (board *Board) ApplyMatch(i int) {
-	board.Tiles = Board{}.Tiles
+func (g *Game) StartMatch(i int) {
+	g.Board = Board{}
 
 	switch i {
 	case 0:
-		board.Match0()
+		g.Board.Match0()
 	case 1:
-		board.Match1()
+		g.Board.Match1()
 	case 2:
-		board.Match2()
+		g.Board.Match2()
 	}
 }
 
